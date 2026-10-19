@@ -1,7 +1,12 @@
 # iiDeviceMultimedia
 
+Package release: **0.2.1** (2026-10-19). This patch packages the current
+source snapshot; build, test and installation evidence is recorded in the SDK
+patch-release report. Earlier versioned feature notes remain historical.
+
+
 iiDeviceMultimedia is the standalone Qt-free native C++23 device/media module
-for iiSDK. Version 0.2.0 owns USB/HID discovery, hotplug, control transfers and
+for iiSDK. Version 0.2.1 owns USB/HID discovery, hotplug, control transfers and
 reports; Bluetooth LE central/GATT; interleaved float32 PCM input/output; and
 MIDI UMP transport/decoding. Its public namespace is `ii::device`.
 

@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.31)
-project(iiDeviceMultimedia VERSION 0.2.0 LANGUAGES CXX)
+project(iiDeviceMultimedia VERSION 0.2.1 LANGUAGES CXX)
 
 include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
