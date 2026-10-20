@@ -68,3 +68,11 @@ operation. Generic raw USB/HID is unavailable on iOS; Android/WASM hardware host
 bridges are unsupported. Protocols and bounded dispatch remain portable. See the
 [hardware contract](docs/hardware.md), [0.1-to-0.2 migration](docs/independence.md),
 [extraction history](docs/extraction.md) and [validation](docs/validation.md).
+
+## License
+
+SPDX-License-Identifier: MIT
+
+The original code and documentation in this repository are licensed under the
+[MIT License](LICENSE). Third-party code, libraries, fonts, tools, and model
+weights retain their respective licenses.
