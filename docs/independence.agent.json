@@ -1,0 +1,423 @@
+{
+  "format": "iisacc.agent-document",
+  "schema_version": 1,
+  "document_id": "urn:iisacc:document:225b9c65bfd1d327ba5b1bde10b0a021b45dc796346244cd3f8afccbfe0fb824",
+  "project": {
+    "id": "urn:iisacc:project:SDK%2FiiDeviceMultimedia",
+    "name": "iiDeviceMultimedia",
+    "root": "SDK/iiDeviceMultimedia",
+    "kind": "sdk"
+  },
+  "source": {
+    "path": "docs/independence.md",
+    "sha256": "833d3d0d9bc09da4ed5d12ff90d97ad54dc41a33c7ff277301cb9147bbd86d81",
+    "bytes": 5549,
+    "line_count": 109,
+    "encoding": "utf-8",
+    "language": "en"
+  },
+  "document": {
+    "title": "Independent packages and application composition",
+    "role": "guide",
+    "authority": "markdown_source"
+  },
+  "blocks": [
+    {
+      "id": "b000001",
+      "kind": "heading",
+      "start_line": 1,
+      "end_line": 1,
+      "raw": "# Independent packages and application composition\n",
+      "level": 1,
+      "title": "Independent packages and application composition"
+    },
+    {
+      "id": "b000002",
+      "kind": "blank",
+      "start_line": 2,
+      "end_line": 2,
+      "raw": "\n"
+    },
+    {
+      "id": "b000003",
+      "kind": "paragraph",
+      "start_line": 3,
+      "end_line": 6,
+      "raw": "iiDeviceMultimedia 0.2.0 and iiSDKCore 0.12 are peer packages. Neither includes,\nlinks, configures, embeds, imports or calls the other. Both use standard C++23\ntypes and their own native platform needs. The application explicitly chooses\nboth packages when it needs both responsibilities:\n"
+    },
+    {
+      "id": "b000004",
+      "kind": "blank",
+      "start_line": 7,
+      "end_line": 7,
+      "raw": "\n"
+    },
+    {
+      "id": "b000005",
+      "kind": "fenced_code",
+      "start_line": 8,
+      "end_line": 11,
+      "raw": "```text\napplication -> iiSDKCore        (runtime, frames, byte I/O)\napplication -> iiDeviceMultimedia (devices, media, protocol codecs)\n```\n",
+      "language": "text",
+      "code": "application -> iiSDKCore        (runtime, frames, byte I/O)\napplication -> iiDeviceMultimedia (devices, media, protocol codecs)\n",
+      "closed": true
+    },
+    {
+      "id": "b000006",
+      "kind": "blank",
+      "start_line": 12,
+      "end_line": 12,
+      "raw": "\n"
+    },
+    {
+      "id": "b000007",
+      "kind": "paragraph",
+      "start_line": 13,
+      "end_line": 17,
+      "raw": "Device declarations live in `ii::device` / `ii::device::protocol`. Its `Error`,\n`ErrorCode` and `Result<T>` are owned by `IO/Result.h`; they do not alias Core's\n`ii::io` errors. Byte spans, PCM spans, chrono durations and C++ callbacks cross\nthe application boundary without a shared SDK base, inheritance or a bridge\nlibrary. Include order and package import order do not change the contract.\n"
+    },
+    {
+      "id": "b000008",
+      "kind": "blank",
+      "start_line": 18,
+      "end_line": 18,
+      "raw": "\n"
+    },
+    {
+      "id": "b000009",
+      "kind": "heading",
+      "start_line": 19,
+      "end_line": 19,
+      "raw": "## Standalone collection\n",
+      "level": 2,
+      "title": "Standalone collection"
+    },
+    {
+      "id": "b000010",
+      "kind": "blank",
+      "start_line": 20,
+      "end_line": 20,
+      "raw": "\n"
+    },
+    {
+      "id": "b000011",
+      "kind": "paragraph",
+      "start_line": 21,
+      "end_line": 28,
+      "raw": "Construct `Hardware(handler, options)` and call `poll()` from the host. A poll\nserializes native collection with device commands, then dispatches at most\n`dispatch_batch` events and returns the successful delivery count. Zero is a\nsuccessful idle poll. Native callbacks enqueue bounded events and never invoke\nthe user handler themselves. No application loop, scheduler slot, worker pool\nor generic task runtime is created or borrowed. The private Apple MIDI native\nnotification thread is still necessary to service CFRunLoop and is joined when\nits final device hub closes.\n"
+    },
+    {
+      "id": "b000012",
+      "kind": "blank",
+      "start_line": 29,
+      "end_line": 29,
+      "raw": "\n"
+    },
+    {
+      "id": "b000013",
+      "kind": "paragraph",
+      "start_line": 30,
+      "end_line": 34,
+      "raw": "Only one poll can be active per hub. Recursive or concurrent polling returns\n`ErrorCode::busy`. Handler exceptions propagate after endpoint and poll activity\nbookkeeping is released; a subsequent poll is allowed. The caller chooses the\ncollection cadence and responsiveness. The old `dispatch_interval` option is\nremoved instead of retaining an unused scheduling knob.\n"
+    },
+    {
+      "id": "b000014",
+      "kind": "blank",
+      "start_line": 35,
+      "end_line": 35,
+      "raw": "\n"
+    },
+    {
+      "id": "b000015",
+      "kind": "heading",
+      "start_line": 36,
+      "end_line": 36,
+      "raw": "## Composition with Core\n",
+      "level": 2,
+      "title": "Composition with Core"
+    },
+    {
+      "id": "b000016",
+      "kind": "blank",
+      "start_line": 37,
+      "end_line": 37,
+      "raw": "\n"
+    },
+    {
+      "id": "b000017",
+      "kind": "paragraph",
+      "start_line": 38,
+      "end_line": 38,
+      "raw": "Only application/consumer CMake explicitly finds both packages:\n"
+    },
+    {
+      "id": "b000018",
+      "kind": "blank",
+      "start_line": 39,
+      "end_line": 39,
+      "raw": "\n"
+    },
+    {
+      "id": "b000019",
+      "kind": "fenced_code",
+      "start_line": 40,
+      "end_line": 45,
+      "raw": "```cmake\nfind_package(iiSDKCore 0.12 CONFIG REQUIRED)\nfind_package(iiDeviceMultimedia 0.2 CONFIG REQUIRED)\ntarget_link_libraries(app PRIVATE\n    iiSDKCore::iiSDKCore iiDeviceMultimedia::iiDeviceMultimedia)\n```\n",
+      "language": "cmake",
+      "code": "find_package(iiSDKCore 0.12 CONFIG REQUIRED)\nfind_package(iiDeviceMultimedia 0.2 CONFIG REQUIRED)\ntarget_link_libraries(app PRIVATE\n    iiSDKCore::iiSDKCore iiDeviceMultimedia::iiDeviceMultimedia)\n",
+      "closed": true
+    },
+    {
+      "id": "b000020",
+      "kind": "blank",
+      "start_line": 46,
+      "end_line": 46,
+      "raw": "\n"
+    },
+    {
+      "id": "b000021",
+      "kind": "paragraph",
+      "start_line": 47,
+      "end_line": 47,
+      "raw": "For a single host dispatch thread:\n"
+    },
+    {
+      "id": "b000022",
+      "kind": "blank",
+      "start_line": 48,
+      "end_line": 48,
+      "raw": "\n"
+    },
+    {
+      "id": "b000023",
+      "kind": "fenced_code",
+      "start_line": 49,
+      "end_line": 67,
+      "raw": "```cpp\n#include <iiSDKCore/Runtime/EventLoop.h>\n#include <iiDeviceMultimedia/IO/Hardware.h>\n\nii::runtime::EventLoop events;\nii::device::Hardware devices([](ii::device::HardwareEvent event) {\n    // Handle on the thread that calls devices.poll().\n});\nconst auto driver = events.every(std::chrono::milliseconds(2), [&] {\n    const auto result = devices.poll();\n    // Inspect device-owned errors; dispatch must not silently ignore failures.\n});\n// Check driver, then pump events.poll()/run() or a FrameLoop on this same host.\n// After that host dispatch has returned:\n(void)driver.token.cancel();\n// Retire any active driver and its borrowed captures before destroying devices.\n// This single-threaded example has no active callback after poll() returns.\nconst auto closed = devices.close();\n```\n",
+      "language": "cpp",
+      "code": "#include <iiSDKCore/Runtime/EventLoop.h>\n#include <iiDeviceMultimedia/IO/Hardware.h>\n\nii::runtime::EventLoop events;\nii::device::Hardware devices([](ii::device::HardwareEvent event) {\n    // Handle on the thread that calls devices.poll().\n});\nconst auto driver = events.every(std::chrono::milliseconds(2), [&] {\n    const auto result = devices.poll();\n    // Inspect device-owned errors; dispatch must not silently ignore failures.\n});\n// Check driver, then pump events.poll()/run() or a FrameLoop on this same host.\n// After that host dispatch has returned:\n(void)driver.token.cancel();\n// Retire any active driver and its borrowed captures before destroying devices.\n// This single-threaded example has no active callback after poll() returns.\nconst auto closed = devices.close();\n",
+      "closed": true
+    },
+    {
+      "id": "b000024",
+      "kind": "blank",
+      "start_line": 68,
+      "end_line": 68,
+      "raw": "\n"
+    },
+    {
+      "id": "b000025",
+      "kind": "paragraph",
+      "start_line": 69,
+      "end_line": 75,
+      "raw": "The timer belongs to the application. Core can continue running after the\ndevice hub closes, and the device module can run without Core. Hosts can instead\npump directly or from another scheduler. There is no SDK-provided Core adapter,\nconditional Core package dependency, or hidden ownership of the external timer.\nFor concurrent hosts, cancellation alone is not a borrowed-lifetime barrier:\nthe host must finish active callbacks before destroying the hub. Core's existing\ntask/lifetime facilities may be used by the application for that purpose.\n"
+    },
+    {
+      "id": "b000026",
+      "kind": "blank",
+      "start_line": 76,
+      "end_line": 76,
+      "raw": "\n"
+    },
+    {
+      "id": "b000027",
+      "kind": "heading",
+      "start_line": 77,
+      "end_line": 77,
+      "raw": "## Shutdown and ownership\n",
+      "level": 2,
+      "title": "Shutdown and ownership"
+    },
+    {
+      "id": "b000028",
+      "kind": "blank",
+      "start_line": 78,
+      "end_line": 78,
+      "raw": "\n"
+    },
+    {
+      "id": "b000029",
+      "kind": "paragraph",
+      "start_line": 79,
+      "end_line": 81,
+      "raw": "`close(endpoint)` returns busy while any poll is active, without changing that\nendpoint. Call it between polls or after the host has stopped its driver. Once\nsuccessful, native resources, stale events and endpoint quota have retired.\n"
+    },
+    {
+      "id": "b000030",
+      "kind": "blank",
+      "start_line": 82,
+      "end_line": 82,
+      "raw": "\n"
+    },
+    {
+      "id": "b000031",
+      "kind": "paragraph",
+      "start_line": 83,
+      "end_line": 90,
+      "raw": "Own-callback `close()` returns busy without stopping the hub. Foreign `close()`\nduring an active poll stops new commands/events/polls and returns busy\ninstead of waiting on another runtime's dispatcher. The current handler may\nfinish; later queued handlers are suppressed. After the external driver retires,\nthe owner retries close to release native resources and handler captures. Closed\npolls return `ErrorCode::closed`. Concurrent close during resource/capture cleanup\nalso returns busy. Successful repeated close remains idempotent. Captures retire\noutside locks before successful close returns, including reentrant cleanup.\n"
+    },
+    {
+      "id": "b000032",
+      "kind": "blank",
+      "start_line": 91,
+      "end_line": 91,
+      "raw": "\n"
+    },
+    {
+      "id": "b000033",
+      "kind": "paragraph",
+      "start_line": 92,
+      "end_line": 95,
+      "raw": "Do not destroy a hub while its close returns busy, from its own handler, or while\nanother caller is still using it. As before, violating this lifetime contract\nterminates instead of abandoning native work. No hard realtime or preemption\nguarantee follows from bounded dispatch. Native device/driver calls may block.\n"
+    },
+    {
+      "id": "b000034",
+      "kind": "blank",
+      "start_line": 96,
+      "end_line": 96,
+      "raw": "\n"
+    },
+    {
+      "id": "b000035",
+      "kind": "heading",
+      "start_line": 97,
+      "end_line": 97,
+      "raw": "## Migration from 0.1\n",
+      "level": 2,
+      "title": "Migration from 0.1"
+    },
+    {
+      "id": "b000036",
+      "kind": "blank",
+      "start_line": 98,
+      "end_line": 98,
+      "raw": "\n"
+    },
+    {
+      "id": "b000037",
+      "kind": "paragraph",
+      "start_line": 99,
+      "end_line": 103,
+      "raw": "Replace `ii::io::Hardware` and `ii::io::protocol` with the corresponding\n`ii::device` names. Replace device error checks with `ii::device::ErrorCode`.\nRemove the EventLoop constructor argument and explicitly own the `poll()` driver.\nFind/link both packages only in applications that actually use both. Remove\n`IIDEVICEMULTIMEDIA_CORE_SOURCE_DIR`; there is no embedded-Core build mode.\n"
+    },
+    {
+      "id": "b000038",
+      "kind": "blank",
+      "start_line": 104,
+      "end_line": 104,
+      "raw": "\n"
+    },
+    {
+      "id": "b000039",
+      "kind": "paragraph",
+      "start_line": 105,
+      "end_line": 109,
+      "raw": "The device package is 0.2.0 with SOVERSION 0.2 and SameMinorVersion package\ncompatibility. Rebuild 0.1 consumers; no compatibility alias or duplicate Core\nerror definition is introduced. Core's generic source and ABI are unchanged by\nthis peer-module refactor. The old extraction is documented historically in\n[extraction.md](extraction.md); current verification is in [validation.md](validation.md).\n"
+    }
+  ],
+  "outline": [
+    {
+      "block_id": "b000001",
+      "parent_id": null,
+      "level": 1,
+      "title": "Independent packages and application composition",
+      "anchor": "independent-packages-and-application-composition",
+      "start_line": 1
+    },
+    {
+      "block_id": "b000009",
+      "parent_id": "b000001",
+      "level": 2,
+      "title": "Standalone collection",
+      "anchor": "standalone-collection",
+      "start_line": 19
+    },
+    {
+      "block_id": "b000015",
+      "parent_id": "b000001",
+      "level": 2,
+      "title": "Composition with Core",
+      "anchor": "composition-with-core",
+      "start_line": 36
+    },
+    {
+      "block_id": "b000027",
+      "parent_id": "b000001",
+      "level": 2,
+      "title": "Shutdown and ownership",
+      "anchor": "shutdown-and-ownership",
+      "start_line": 77
+    },
+    {
+      "block_id": "b000035",
+      "parent_id": "b000001",
+      "level": 2,
+      "title": "Migration from 0.1",
+      "anchor": "migration-from-01",
+      "start_line": 97
+    }
+  ],
+  "indexes": {
+    "directive_candidates": [
+      {
+        "block_id": "b000007",
+        "line": 14,
+        "text": "`ErrorCode` and `Result<T>` are owned by `IO/Result.h`; they do not alias Core's",
+        "basis": "lexical_match",
+        "context": "paragraph"
+      },
+      {
+        "block_id": "b000007",
+        "line": 17,
+        "text": "library. Include order and package import order do not change the contract.",
+        "basis": "lexical_match",
+        "context": "paragraph"
+      },
+      {
+        "block_id": "b000011",
+        "line": 24,
+        "text": "successful idle poll. Native callbacks enqueue bounded events and never invoke",
+        "basis": "lexical_match",
+        "context": "paragraph"
+      },
+      {
+        "block_id": "b000025",
+        "line": 74,
+        "text": "the host must finish active callbacks before destroying the hub. Core's existing",
+        "basis": "lexical_match",
+        "context": "paragraph"
+      },
+      {
+        "block_id": "b000033",
+        "line": 92,
+        "text": "Do not destroy a hub while its close returns busy, from its own handler, or while",
+        "basis": "lexical_match",
+        "context": "paragraph"
+      }
+    ],
+    "commands": [],
+    "links": [
+      {
+        "block_id": "b000039",
+        "label": "extraction.md",
+        "target": "extraction.md",
+        "kind": "relative",
+        "line": 109
+      },
+      {
+        "block_id": "b000039",
+        "label": "validation.md",
+        "target": "validation.md",
+        "kind": "relative",
+        "line": 109
+      }
+    ],
+    "tables": []
+  },
+  "provenance": {
+    "generator": "workspace-docs",
+    "version": "1.0.0",
+    "profile": "lossless-blocks-v1",
+    "derived": true
+  }
+}

@@ -1,0 +1,958 @@
+{
+  "format": "iisacc.agent-document",
+  "schema_version": 1,
+  "document_id": "urn:iisacc:document:6f11709cd1b437e9b71d82d59c1c74de66fc0723fe04fb2faa8df53bd700f818",
+  "project": {
+    "id": "urn:iisacc:project:SDK%2FiiDeviceMultimedia",
+    "name": "iiDeviceMultimedia",
+    "root": "SDK/iiDeviceMultimedia",
+    "kind": "sdk"
+  },
+  "source": {
+    "path": "docs/validation.md",
+    "sha256": "93e13cd873311601d7b779269bb333004fa35174991cd318132a24c782d78b62",
+    "bytes": 13992,
+    "line_count": 202,
+    "encoding": "utf-8",
+    "language": "en"
+  },
+  "document": {
+    "title": "Independent peer-module validation — 2026-10-15",
+    "role": "guide",
+    "authority": "markdown_source"
+  },
+  "blocks": [
+    {
+      "id": "b000001",
+      "kind": "heading",
+      "start_line": 1,
+      "end_line": 1,
+      "raw": "# Independent peer-module validation — 2026-10-15\n",
+      "level": 1,
+      "title": "Independent peer-module validation — 2026-10-15"
+    },
+    {
+      "id": "b000002",
+      "kind": "blank",
+      "start_line": 2,
+      "end_line": 2,
+      "raw": "\n"
+    },
+    {
+      "id": "b000003",
+      "kind": "paragraph",
+      "start_line": 3,
+      "end_line": 7,
+      "raw": "Version 0.2.0 removes the former dependency from iiDeviceMultimedia to Core.\nNeither package imports, includes, links or calls the other. The application\nexplicitly composes device polling with its chosen runtime. The 0.1 extraction\nrecord below is historical; current architecture and migration are described in\n[independence.md](independence.md).\n"
+    },
+    {
+      "id": "b000004",
+      "kind": "blank",
+      "start_line": 8,
+      "end_line": 8,
+      "raw": "\n"
+    },
+    {
+      "id": "b000005",
+      "kind": "heading",
+      "start_line": 9,
+      "end_line": 9,
+      "raw": "## Independent and composed execution\n",
+      "level": 2,
+      "title": "Independent and composed execution"
+    },
+    {
+      "id": "b000006",
+      "kind": "blank",
+      "start_line": 10,
+      "end_line": 10,
+      "raw": "\n"
+    },
+    {
+      "id": "b000007",
+      "kind": "table",
+      "start_line": 11,
+      "end_line": 23,
+      "raw": "| Configuration | Result | Scope |\n| --- | --- | --- |\n| Device macOS arm64 Release/shared | 6/6 CTests | Independent package/source boundary, native hardware, state, protocols, new lifecycle and sealed-record policy |\n| Device Debug/static, ASan + UBSan | 6/6 CTests | C++/Objective-C++ instrumentation; C++ warnings as errors |\n| Device Debug/static, ThreadSanitizer | 6/6 CTests | Native MIDI thread/poll/close and state/audio-ring concurrency; no race report |\n| Core macOS Release/shared | 34/34 CTests | All retained runtime/frame/I/O/value regressions; no Core source implementation change |\n| Core-only installed consumer | 13/13 CTests | Device package lookup disabled; standalone Core import and runtime remain intact |\n| Relocated standalone device consumer | 3/3 CTests | Core package lookup disabled; no imported Core target, header or library required |\n| Device-first composed package consumer | 1/1 CTest | Explicitly imports both packages and compiles both header orders |\n| Core-first composed package consumer | 1/1 CTest | Reversed package order; same native integration contract |\n| WASM32 pthreads, Node 24 | 6/6 CTests | Portable protocols, polling/lifecycle/state and unsupported hardware; policy executes on host |\n| Windows x64 / Linux arm64 / Android arm64 | Device library, four functional tests, inventory example and three public headers cross-built | Native PE/ELF; no Core build target; no target execution |\n| iOS arm64 | Device static archive and Apple bridge cross-built | Mach-O IOS, minimum OS 15.0, SDK 27.0; no Core build target or device execution |\n",
+      "columns": [
+        "Configuration",
+        "Result",
+        "Scope"
+      ],
+      "rows": [
+        [
+          "Device macOS arm64 Release/shared",
+          "6/6 CTests",
+          "Independent package/source boundary, native hardware, state, protocols, new lifecycle and sealed-record policy"
+        ],
+        [
+          "Device Debug/static, ASan + UBSan",
+          "6/6 CTests",
+          "C++/Objective-C++ instrumentation; C++ warnings as errors"
+        ],
+        [
+          "Device Debug/static, ThreadSanitizer",
+          "6/6 CTests",
+          "Native MIDI thread/poll/close and state/audio-ring concurrency; no race report"
+        ],
+        [
+          "Core macOS Release/shared",
+          "34/34 CTests",
+          "All retained runtime/frame/I/O/value regressions; no Core source implementation change"
+        ],
+        [
+          "Core-only installed consumer",
+          "13/13 CTests",
+          "Device package lookup disabled; standalone Core import and runtime remain intact"
+        ],
+        [
+          "Relocated standalone device consumer",
+          "3/3 CTests",
+          "Core package lookup disabled; no imported Core target, header or library required"
+        ],
+        [
+          "Device-first composed package consumer",
+          "1/1 CTest",
+          "Explicitly imports both packages and compiles both header orders"
+        ],
+        [
+          "Core-first composed package consumer",
+          "1/1 CTest",
+          "Reversed package order; same native integration contract"
+        ],
+        [
+          "WASM32 pthreads, Node 24",
+          "6/6 CTests",
+          "Portable protocols, polling/lifecycle/state and unsupported hardware; policy executes on host"
+        ],
+        [
+          "Windows x64 / Linux arm64 / Android arm64",
+          "Device library, four functional tests, inventory example and three public headers cross-built",
+          "Native PE/ELF; no Core build target; no target execution"
+        ],
+        [
+          "iOS arm64",
+          "Device static archive and Apple bridge cross-built",
+          "Mach-O IOS, minimum OS 15.0, SDK 27.0; no Core build target or device execution"
+        ]
+      ]
+    },
+    {
+      "id": "b000008",
+      "kind": "blank",
+      "start_line": 24,
+      "end_line": 24,
+      "raw": "\n"
+    },
+    {
+      "id": "b000009",
+      "kind": "paragraph",
+      "start_line": 25,
+      "end_line": 31,
+      "raw": "Both composed consumers report `frames=7 polls=5 native_notes=1` in their recorded\nruns. The application-owned Core timer calls device poll, Core FrameLoop advances,\na device USB setup packet roundtrips through Core Channel file I/O, and native\nCoreMIDI virtual endpoints route one MIDI 2.0 note into the host callback. The\napplication cancels the timer and verifies driver-capture retirement before\nclosing devices. Core frames continue after device shutdown. Header-order probes\nprove device errors/results are distinct from Core's ii::io types.\n"
+    },
+    {
+      "id": "b000010",
+      "kind": "blank",
+      "start_line": 32,
+      "end_line": 32,
+      "raw": "\n"
+    },
+    {
+      "id": "b000011",
+      "kind": "paragraph",
+      "start_line": 33,
+      "end_line": 41,
+      "raw": "The standalone native hardware test retains enumeration, output queue/silence,\nvirtual UMP topology, close/reopen and notification-pump coverage. It now also\nchecks recursive poll, own-callback hub/endpoint close, and a foreign close while\nthe user handler is held on another thread. The foreign close stops admission,\nreturns busy without waiting for that handler, and succeeds on owner retry.\nState tests retain payload limits, stale endpoints, FIFO, active-delivery quota\nand concurrent audio-ring order; new checks cover stopped admission and exception\naccounting/recovery. Lifecycle tests cover standalone validation, polling, typed\nclosed results, idempotence and reentrant capture retirement outside locks.\n"
+    },
+    {
+      "id": "b000012",
+      "kind": "blank",
+      "start_line": 42,
+      "end_line": 42,
+      "raw": "\n"
+    },
+    {
+      "id": "b000013",
+      "kind": "heading",
+      "start_line": 43,
+      "end_line": 43,
+      "raw": "## Dependency and preservation evidence\n",
+      "level": 2,
+      "title": "Dependency and preservation evidence"
+    },
+    {
+      "id": "b000014",
+      "kind": "blank",
+      "start_line": 44,
+      "end_line": 44,
+      "raw": "\n"
+    },
+    {
+      "id": "b000015",
+      "kind": "paragraph",
+      "start_line": 45,
+      "end_line": 49,
+      "raw": "The device dylib contains no Core imports or link dependency. Its owned symbols\nuse ii::device and ii::device::protocol. Core contains no reverse device link.\nThe standalone installed executable links only the device SDK; the composed\nexecutable explicitly links both. SDK-wide installer discovery reports no SDK\ndependencies for either project, with no edge between them.\n"
+    },
+    {
+      "id": "b000016",
+      "kind": "blank",
+      "start_line": 50,
+      "end_line": 50,
+      "raw": "\n"
+    },
+    {
+      "id": "b000017",
+      "kind": "paragraph",
+      "start_line": 51,
+      "end_line": 56,
+      "raw": "The installed device prefix is relocated before consumer configuration. All\nthree public headers match source and the installed dylib matches the build\nbyte-for-byte. SOVERSION 0.2 distinguishes the new ABI from 0.1. No compatibility\nalias, shared SDK error header, optional Core adapter or embedded-Core option is\nused. Composition tests are a separate application project and are absent from\nthe device package's production dependency graph.\n"
+    },
+    {
+      "id": "b000018",
+      "kind": "blank",
+      "start_line": 57,
+      "end_line": 57,
+      "raw": "\n"
+    },
+    {
+      "id": "b000019",
+      "kind": "paragraph",
+      "start_line": 58,
+      "end_line": 63,
+      "raw": "All 65 Core source implementation/header files and its build/package definitions\nmatch their pre-refactor hashes. Core remains 0.12.0. Protocol codec algorithms,\nLinux/portable backends and Apple ID parsing match the previous implementation\nafter namespace/include relocation. Device runtime coupling is replaced narrowly\nwith its host poll guard, a joined standard Apple MIDI notification thread and\nWindows BLE admission locking; no general runtime is copied into this module.\n"
+    },
+    {
+      "id": "b000020",
+      "kind": "blank",
+      "start_line": 64,
+      "end_line": 64,
+      "raw": "\n"
+    },
+    {
+      "id": "b000021",
+      "kind": "paragraph",
+      "start_line": 65,
+      "end_line": 71,
+      "raw": "The initial independence guard rejected the former Core dependency, and standalone\nlifecycle syntax compilation failed on its Core include before implementation.\nThose first-failure logs and the complete previous extraction state are preserved\nunder `build/independence-baseline/`. A Linux manifest check initially classified\nsysroot assets located under another checkout's build directory as an SDK API\ndependency; the guard now checks actual source/package references and target\nlink requirements separately from physical toolchain-directory names.\n"
+    },
+    {
+      "id": "b000022",
+      "kind": "blank",
+      "start_line": 72,
+      "end_line": 72,
+      "raw": "\n"
+    },
+    {
+      "id": "b000023",
+      "kind": "paragraph",
+      "start_line": 73,
+      "end_line": 73,
+      "raw": "Machine-readable reports are retained at:\n"
+    },
+    {
+      "id": "b000024",
+      "kind": "blank",
+      "start_line": 74,
+      "end_line": 74,
+      "raw": "\n"
+    },
+    {
+      "id": "b000025",
+      "kind": "list",
+      "start_line": 75,
+      "end_line": 85,
+      "raw": "- `build/independence-verification.json`: final source/artifact hashes, test\n  results, namespace/linkage, platform formats and explicit limits.\n- `build/independence-linkage.json`: no cross-library dependency and standalone\n  versus explicitly composed imports.\n- `build/independence-native-tests.xml`.\n- `build/sanitize/build/independence-sanitizer-tests.xml`.\n- `build/tsan/build/independence-tsan-tests.xml`.\n- `build/independent-package/consumer/build/independence-installed-tests.xml`.\n- `build/independent-package/{device-first,core-first}/build/`: composed XML and\n  native observation logs.\n- `build/wasm-threads/build/independence-wasm-tests.xml`.\n",
+      "items": [
+        {
+          "marker": "-",
+          "text": "`build/independence-verification.json`: final source/artifact hashes, test",
+          "checked": null
+        },
+        {
+          "marker": "-",
+          "text": "`build/independence-linkage.json`: no cross-library dependency and standalone",
+          "checked": null
+        },
+        {
+          "marker": "-",
+          "text": "`build/independence-native-tests.xml`.",
+          "checked": null
+        },
+        {
+          "marker": "-",
+          "text": "`build/sanitize/build/independence-sanitizer-tests.xml`.",
+          "checked": null
+        },
+        {
+          "marker": "-",
+          "text": "`build/tsan/build/independence-tsan-tests.xml`.",
+          "checked": null
+        },
+        {
+          "marker": "-",
+          "text": "`build/independent-package/consumer/build/independence-installed-tests.xml`.",
+          "checked": null
+        },
+        {
+          "marker": "-",
+          "text": "`build/independent-package/{device-first,core-first}/build/`: composed XML and",
+          "checked": null
+        },
+        {
+          "marker": "-",
+          "text": "`build/wasm-threads/build/independence-wasm-tests.xml`.",
+          "checked": null
+        }
+      ]
+    },
+    {
+      "id": "b000026",
+      "kind": "blank",
+      "start_line": 86,
+      "end_line": 86,
+      "raw": "\n"
+    },
+    {
+      "id": "b000027",
+      "kind": "paragraph",
+      "start_line": 87,
+      "end_line": 89,
+      "raw": "Core-only installed consumption is recorded in Core's\n`build/device-package/core-consumer/build/` with device lookup disabled. Core's\nfull native output is `build/device-independence-core-tests.xml`.\n"
+    },
+    {
+      "id": "b000028",
+      "kind": "blank",
+      "start_line": 90,
+      "end_line": 90,
+      "raw": "\n"
+    },
+    {
+      "id": "b000029",
+      "kind": "paragraph",
+      "start_line": 91,
+      "end_line": 96,
+      "raw": "Verification installs remain inside Workspace; global ~/.local packages are\nunchanged. Physical USB/HID transfers, BLE peripherals, microphone capture,\naudible speaker output and Windows/Linux/Android/iOS runtime execution are not\nproved by this pass. Android/WASM hardware bridges and iOS generic raw USB/HID\nremain unsupported. The Windows SDK here compiles the MIDI 1.0 fallback; its\noptional Midi2 projection path is not covered by this cross-build.\n"
+    },
+    {
+      "id": "b000030",
+      "kind": "blank",
+      "start_line": 97,
+      "end_line": 97,
+      "raw": "\n"
+    },
+    {
+      "id": "b000031",
+      "kind": "heading",
+      "start_line": 98,
+      "end_line": 98,
+      "raw": "## Historical 0.1.0 extraction validation — 2026-10-15\n",
+      "level": 2,
+      "title": "Historical 0.1.0 extraction validation — 2026-10-15"
+    },
+    {
+      "id": "b000032",
+      "kind": "blank",
+      "start_line": 99,
+      "end_line": 99,
+      "raw": "\n"
+    },
+    {
+      "id": "b000033",
+      "kind": "paragraph",
+      "start_line": 100,
+      "end_line": 103,
+      "raw": "iiDeviceMultimedia 0.1.0 extracts the existing device/media implementation from\niiSDKCore 0.11.0 and depends on the device-free Core 0.12.0 package. Previous Core\ndevice validation remains historical evidence. The results below were executed\nafter extraction; no new physical-device coverage is implied by moving the code.\n"
+    },
+    {
+      "id": "b000034",
+      "kind": "blank",
+      "start_line": 104,
+      "end_line": 104,
+      "raw": "\n"
+    },
+    {
+      "id": "b000035",
+      "kind": "heading",
+      "start_line": 105,
+      "end_line": 105,
+      "raw": "## Regression and package checks\n",
+      "level": 2,
+      "title": "Regression and package checks"
+    },
+    {
+      "id": "b000036",
+      "kind": "blank",
+      "start_line": 106,
+      "end_line": 106,
+      "raw": "\n"
+    },
+    {
+      "id": "b000037",
+      "kind": "table",
+      "start_line": 107,
+      "end_line": 117,
+      "raw": "| Configuration | Result | Evidence boundary |\n| --- | --- | --- |\n| macOS arm64 Release, source Core dependency | 4/4 CTests | Hardware, bounded state, protocols and architecture policy; public headers and inventory example built |\n| macOS Debug/static, ASan + UBSan | 4/4 CTests | Core and device C++ instrumented; native Objective-C++ bridge instrumented; C++ warnings treated as errors |\n| Independent build against installed Core | 4/4 CTests | No Core source/tools required; imported Core supplies public include and link requirements |\n| Relocated installed device/Core consumer | 3/3 CTests | Public API, protocols, native hardware contracts and FrameLoop coexist across the package boundary |\n| Core-only native regression | 34/34 CTests | Retained runtime/value/I/O behavior, examples and device-boundary guard |\n| Core-only ASan + UBSan | 12/12 focused CTests | FrameLoop/example, Runtime, Query, Thread, shared payloads, realtime, I/O, cleanup, reuse and ownership boundary |\n| Relocated Core-only consumer | 13/13 CTests | Upgraded package imports no device target or PkgConfig; retained frame and I/O contracts |\n| Values-only installed consumer | 3/3 CTests | No runtime, Threads or device dependency imports |\n| Emscripten pthreads, Node 24 | 3/3 CTests | Portable protocol/state and explicit unsupported hardware contracts; no browser device bridge |\n",
+      "columns": [
+        "Configuration",
+        "Result",
+        "Evidence boundary"
+      ],
+      "rows": [
+        [
+          "macOS arm64 Release, source Core dependency",
+          "4/4 CTests",
+          "Hardware, bounded state, protocols and architecture policy; public headers and inventory example built"
+        ],
+        [
+          "macOS Debug/static, ASan + UBSan",
+          "4/4 CTests",
+          "Core and device C++ instrumented; native Objective-C++ bridge instrumented; C++ warnings treated as errors"
+        ],
+        [
+          "Independent build against installed Core",
+          "4/4 CTests",
+          "No Core source/tools required; imported Core supplies public include and link requirements"
+        ],
+        [
+          "Relocated installed device/Core consumer",
+          "3/3 CTests",
+          "Public API, protocols, native hardware contracts and FrameLoop coexist across the package boundary"
+        ],
+        [
+          "Core-only native regression",
+          "34/34 CTests",
+          "Retained runtime/value/I/O behavior, examples and device-boundary guard"
+        ],
+        [
+          "Core-only ASan + UBSan",
+          "12/12 focused CTests",
+          "FrameLoop/example, Runtime, Query, Thread, shared payloads, realtime, I/O, cleanup, reuse and ownership boundary"
+        ],
+        [
+          "Relocated Core-only consumer",
+          "13/13 CTests",
+          "Upgraded package imports no device target or PkgConfig; retained frame and I/O contracts"
+        ],
+        [
+          "Values-only installed consumer",
+          "3/3 CTests",
+          "No runtime, Threads or device dependency imports"
+        ],
+        [
+          "Emscripten pthreads, Node 24",
+          "3/3 CTests",
+          "Portable protocol/state and explicit unsupported hardware contracts; no browser device bridge"
+        ]
+      ]
+    },
+    {
+      "id": "b000038",
+      "kind": "blank",
+      "start_line": 118,
+      "end_line": 118,
+      "raw": "\n"
+    },
+    {
+      "id": "b000039",
+      "kind": "paragraph",
+      "start_line": 119,
+      "end_line": 126,
+      "raw": "The native hardware suite performs available enumeration and validation. On this\nmacOS host it also exercises CoreMIDI virtual endpoint topology, OS-routed UMP\ndelivery, repeated close/reopen and the headless notification pump. It checks\nnative output queue setup and float32 silence writes where an output is present.\nBLE scanning and microphone capture are not exercised. It does not prove physical\nspeaker playback, physical USB/HID transfers or BLE peripheral communication.\nApple missing-autorelease-pool diagnostics stay\nenabled for the hardware CTest.\n"
+    },
+    {
+      "id": "b000040",
+      "kind": "blank",
+      "start_line": 127,
+      "end_line": 127,
+      "raw": "\n"
+    },
+    {
+      "id": "b000041",
+      "kind": "paragraph",
+      "start_line": 128,
+      "end_line": 131,
+      "raw": "The first sanitizer run passed all three functional suites but reached the\nunchanged 60-second architecture-test timeout while cross-builds were running.\nThe first XML report is retained. A subsequent unchanged full run passed 4/4,\nincluding the architecture test; neither timeout nor policy was relaxed.\n"
+    },
+    {
+      "id": "b000042",
+      "kind": "blank",
+      "start_line": 132,
+      "end_line": 132,
+      "raw": "\n"
+    },
+    {
+      "id": "b000043",
+      "kind": "heading",
+      "start_line": 133,
+      "end_line": 133,
+      "raw": "## Native target compilation\n",
+      "level": 2,
+      "title": "Native target compilation"
+    },
+    {
+      "id": "b000044",
+      "kind": "blank",
+      "start_line": 134,
+      "end_line": 134,
+      "raw": "\n"
+    },
+    {
+      "id": "b000045",
+      "kind": "table",
+      "start_line": 135,
+      "end_line": 141,
+      "raw": "| Target | Verified output | Execution boundary |\n| --- | --- | --- |\n| Windows x64 | PE32+ device/Core DLLs, three tests, inventory example and public headers | No Windows execution; this SDK uses the WinRT MIDI 1.0 fallback, so the optional Midi2-projection path is not covered by this cross-build |\n| Linux arm64 | ELF device/Core libraries, three tests, inventory example and public headers | libudev/BlueZ D-Bus/ALSA implementation compiled and linked; no Linux execution |\n| Android arm64, API 26 | NDK ELF libraries, three tests, inventory example and public headers | Portable unsupported hardware backend; no Android device execution |\n| iOS arm64 | Device/Core static archives and native Apple bridge object | Mach-O, platform IOS, minimum OS 15.0, SDK 27.0; no device execution |\n| WASM32 pthreads | Static libraries, three test modules, inventory example and public headers | WebAssembly execution in Node; hardware host APIs unsupported |\n",
+      "columns": [
+        "Target",
+        "Verified output",
+        "Execution boundary"
+      ],
+      "rows": [
+        [
+          "Windows x64",
+          "PE32+ device/Core DLLs, three tests, inventory example and public headers",
+          "No Windows execution; this SDK uses the WinRT MIDI 1.0 fallback, so the optional Midi2-projection path is not covered by this cross-build"
+        ],
+        [
+          "Linux arm64",
+          "ELF device/Core libraries, three tests, inventory example and public headers",
+          "libudev/BlueZ D-Bus/ALSA implementation compiled and linked; no Linux execution"
+        ],
+        [
+          "Android arm64, API 26",
+          "NDK ELF libraries, three tests, inventory example and public headers",
+          "Portable unsupported hardware backend; no Android device execution"
+        ],
+        [
+          "iOS arm64",
+          "Device/Core static archives and native Apple bridge object",
+          "Mach-O, platform IOS, minimum OS 15.0, SDK 27.0; no device execution"
+        ],
+        [
+          "WASM32 pthreads",
+          "Static libraries, three test modules, inventory example and public headers",
+          "WebAssembly execution in Node; hardware host APIs unsupported"
+        ]
+      ]
+    },
+    {
+      "id": "b000046",
+      "kind": "blank",
+      "start_line": 142,
+      "end_line": 142,
+      "raw": "\n"
+    },
+    {
+      "id": "b000047",
+      "kind": "paragraph",
+      "start_line": 143,
+      "end_line": 148,
+      "raw": "The mandatory source/preprocessor architecture gate passed nine device\ntranslation units in native/Windows/Linux/Android/WASM test builds and three in\nthe tests-disabled iOS build. Embedded Core passed 17 translation units, or 18\nwith its browser driver. Core's standalone native gate passed 85. No policy\nbypass, engine, Qt, shared VM or interpreter dependency was introduced. The five\nOS targets compile native C++; WASM follows its separate WebAssembly host model.\n"
+    },
+    {
+      "id": "b000048",
+      "kind": "blank",
+      "start_line": 149,
+      "end_line": 149,
+      "raw": "\n"
+    },
+    {
+      "id": "b000049",
+      "kind": "heading",
+      "start_line": 150,
+      "end_line": 150,
+      "raw": "## Ownership, migration and installation safety\n",
+      "level": 2,
+      "title": "Ownership, migration and installation safety"
+    },
+    {
+      "id": "b000050",
+      "kind": "blank",
+      "start_line": 151,
+      "end_line": 151,
+      "raw": "\n"
+    },
+    {
+      "id": "b000051",
+      "kind": "paragraph",
+      "start_line": 152,
+      "end_line": 158,
+      "raw": "Fourteen moved source/test/example files match their original bytes after only\npublic include relocation and OS client/queue/test display-name substitutions.\nNo parser, state machine, backend algorithm or functional test assertion changed.\nEight preexisting frame-loop source/test/example files match their earlier\nverification hashes. The other 61 retained tracked Core source files match their\noriginal Git contents. A pre-extraction backup and the existing dirty patch are\npreserved in Core's `build/device-extraction-baseline/`.\n"
+    },
+    {
+      "id": "b000052",
+      "kind": "blank",
+      "start_line": 159,
+      "end_line": 159,
+      "raw": "\n"
+    },
+    {
+      "id": "b000053",
+      "kind": "paragraph",
+      "start_line": 160,
+      "end_line": 165,
+      "raw": "Core 0.11-to-0.12 upgrade checks removed exactly the obsolete Hardware/Protocols\nheaders while preserving an unrelated sentinel and the old versioned dylib.\nAll 45 current Core headers match the generated build headers and its installed\n0.12 dylib matches the native build. DESTDIR staging, including a prefix with\nspaces, removes only the two obsolete files and preserves an adjacent generic\nheader without touching the unstaged prefix.\n"
+    },
+    {
+      "id": "b000054",
+      "kind": "blank",
+      "start_line": 166,
+      "end_line": 166,
+      "raw": "\n"
+    },
+    {
+      "id": "b000055",
+      "kind": "paragraph",
+      "start_line": 167,
+      "end_line": 175,
+      "raw": "The device package was built independently against that installed Core, installed\nto a separate prefix, then relocated before consumer configuration. Its two\ninstalled headers match source. CMake removes the build RPATH during installation;\nthe native `__TEXT,__text` section is byte-identical. Both libraries use relocatable\n`@rpath` install names. Core links only libc++/libSystem on macOS and exports no\nHardware/protocol symbols. The device library exports those symbols and imports\nCore plus its native frameworks. Core 0.11 is rejected by the new package's\nminimum-version dependency. SDK-wide installation discovery automatically orders\nCore before this module with no reverse edge.\n"
+    },
+    {
+      "id": "b000056",
+      "kind": "blank",
+      "start_line": 176,
+      "end_line": 176,
+      "raw": "\n"
+    },
+    {
+      "id": "b000057",
+      "kind": "paragraph",
+      "start_line": 177,
+      "end_line": 179,
+      "raw": "Commands use CMake source or installed-Core mode documented in the README. Tests\nuse `ctest --test-dir build --output-on-failure`, with analogous build subtrees for\nsanitizers, cross targets and consumers. Machine-readable evidence is retained at:\n"
+    },
+    {
+      "id": "b000058",
+      "kind": "blank",
+      "start_line": 180,
+      "end_line": 180,
+      "raw": "\n"
+    },
+    {
+      "id": "b000059",
+      "kind": "list",
+      "start_line": 181,
+      "end_line": 196,
+      "raw": "- `build/extraction-verification.json`: complete test counts, source/artifact\n  hashes, package safety, linkage and execution limits.\n- `build/extraction-provenance.json`: normalized extraction comparison and\n  preservation of the existing Core work.\n- `build/extraction-linkage.json` and `build/extraction-platforms.json`: library\n  ownership and target binary formats.\n- `build/device-extraction-native-tests.xml` and\n  `build/sanitize/build/device-extraction-sanitizer-tests.xml`: full module tests.\n- `build/sanitize/build/device-extraction-sanitizer-first-tests.xml`: first run\n  with the architecture timeout.\n- `build/installed-core/build/device-extraction-installed-core-build-tests.xml`:\n  independent source build against the installed Core.\n- `build/package-consumer/build/device-extraction-installed-tests.xml`: relocated\n  installed consumer.\n- `build/wasm-threads/build/device-extraction-wasm-tests.xml`: Node contracts.\n- `build/reject-old-core/configure.log`: expected rejection of Core 0.11.\n",
+      "items": [
+        {
+          "marker": "-",
+          "text": "`build/extraction-verification.json`: complete test counts, source/artifact",
+          "checked": null
+        },
+        {
+          "marker": "-",
+          "text": "`build/extraction-provenance.json`: normalized extraction comparison and",
+          "checked": null
+        },
+        {
+          "marker": "-",
+          "text": "`build/extraction-linkage.json` and `build/extraction-platforms.json`: library",
+          "checked": null
+        },
+        {
+          "marker": "-",
+          "text": "`build/device-extraction-native-tests.xml` and",
+          "checked": null
+        },
+        {
+          "marker": "-",
+          "text": "`build/sanitize/build/device-extraction-sanitizer-first-tests.xml`: first run",
+          "checked": null
+        },
+        {
+          "marker": "-",
+          "text": "`build/installed-core/build/device-extraction-installed-core-build-tests.xml`:",
+          "checked": null
+        },
+        {
+          "marker": "-",
+          "text": "`build/package-consumer/build/device-extraction-installed-tests.xml`: relocated",
+          "checked": null
+        },
+        {
+          "marker": "-",
+          "text": "`build/wasm-threads/build/device-extraction-wasm-tests.xml`: Node contracts.",
+          "checked": null
+        },
+        {
+          "marker": "-",
+          "text": "`build/reject-old-core/configure.log`: expected rejection of Core 0.11.",
+          "checked": null
+        }
+      ]
+    },
+    {
+      "id": "b000060",
+      "kind": "blank",
+      "start_line": 197,
+      "end_line": 197,
+      "raw": "\n"
+    },
+    {
+      "id": "b000061",
+      "kind": "paragraph",
+      "start_line": 198,
+      "end_line": 202,
+      "raw": "Installation for verification stays inside Workspace in Core's\n`build/device-package/relocated/{core,device}`. The global `~/.local` SDK was not\nupdated. OS permissions, real hardware availability, Windows/Linux/Android/iOS\nruntime execution, mobile installation and production endurance remain outside\nthis verification. See [hardware support and limits](hardware.md).\n"
+    }
+  ],
+  "outline": [
+    {
+      "block_id": "b000001",
+      "parent_id": null,
+      "level": 1,
+      "title": "Independent peer-module validation — 2026-10-15",
+      "anchor": "independent-peer-module-validation--2026-10-15",
+      "start_line": 1
+    },
+    {
+      "block_id": "b000005",
+      "parent_id": "b000001",
+      "level": 2,
+      "title": "Independent and composed execution",
+      "anchor": "independent-and-composed-execution",
+      "start_line": 9
+    },
+    {
+      "block_id": "b000013",
+      "parent_id": "b000001",
+      "level": 2,
+      "title": "Dependency and preservation evidence",
+      "anchor": "dependency-and-preservation-evidence",
+      "start_line": 43
+    },
+    {
+      "block_id": "b000031",
+      "parent_id": "b000001",
+      "level": 2,
+      "title": "Historical 0.1.0 extraction validation — 2026-10-15",
+      "anchor": "historical-010-extraction-validation--2026-10-15",
+      "start_line": 98
+    },
+    {
+      "block_id": "b000035",
+      "parent_id": "b000001",
+      "level": 2,
+      "title": "Regression and package checks",
+      "anchor": "regression-and-package-checks",
+      "start_line": 105
+    },
+    {
+      "block_id": "b000043",
+      "parent_id": "b000001",
+      "level": 2,
+      "title": "Native target compilation",
+      "anchor": "native-target-compilation",
+      "start_line": 133
+    },
+    {
+      "block_id": "b000049",
+      "parent_id": "b000001",
+      "level": 2,
+      "title": "Ownership, migration and installation safety",
+      "anchor": "ownership-migration-and-installation-safety",
+      "start_line": 150
+    }
+  ],
+  "indexes": {
+    "directive_candidates": [
+      {
+        "block_id": "b000007",
+        "line": 18,
+        "text": "| Relocated standalone device consumer | 3/3 CTests | Core package lookup disabled; no imported Core target, header or library required |",
+        "basis": "lexical_match",
+        "context": "table"
+      },
+      {
+        "block_id": "b000037",
+        "line": 111,
+        "text": "| Independent build against installed Core | 4/4 CTests | No Core source/tools required; imported Core supplies public include and link requirements |",
+        "basis": "lexical_match",
+        "context": "table"
+      }
+    ],
+    "commands": [],
+    "links": [
+      {
+        "block_id": "b000003",
+        "label": "independence.md",
+        "target": "independence.md",
+        "kind": "relative",
+        "line": 7
+      },
+      {
+        "block_id": "b000061",
+        "label": "hardware support and limits",
+        "target": "hardware.md",
+        "kind": "relative",
+        "line": 202
+      }
+    ],
+    "tables": [
+      {
+        "block_id": "b000007",
+        "columns": [
+          "Configuration",
+          "Result",
+          "Scope"
+        ],
+        "rows": [
+          [
+            "Device macOS arm64 Release/shared",
+            "6/6 CTests",
+            "Independent package/source boundary, native hardware, state, protocols, new lifecycle and sealed-record policy"
+          ],
+          [
+            "Device Debug/static, ASan + UBSan",
+            "6/6 CTests",
+            "C++/Objective-C++ instrumentation; C++ warnings as errors"
+          ],
+          [
+            "Device Debug/static, ThreadSanitizer",
+            "6/6 CTests",
+            "Native MIDI thread/poll/close and state/audio-ring concurrency; no race report"
+          ],
+          [
+            "Core macOS Release/shared",
+            "34/34 CTests",
+            "All retained runtime/frame/I/O/value regressions; no Core source implementation change"
+          ],
+          [
+            "Core-only installed consumer",
+            "13/13 CTests",
+            "Device package lookup disabled; standalone Core import and runtime remain intact"
+          ],
+          [
+            "Relocated standalone device consumer",
+            "3/3 CTests",
+            "Core package lookup disabled; no imported Core target, header or library required"
+          ],
+          [
+            "Device-first composed package consumer",
+            "1/1 CTest",
+            "Explicitly imports both packages and compiles both header orders"
+          ],
+          [
+            "Core-first composed package consumer",
+            "1/1 CTest",
+            "Reversed package order; same native integration contract"
+          ],
+          [
+            "WASM32 pthreads, Node 24",
+            "6/6 CTests",
+            "Portable protocols, polling/lifecycle/state and unsupported hardware; policy executes on host"
+          ],
+          [
+            "Windows x64 / Linux arm64 / Android arm64",
+            "Device library, four functional tests, inventory example and three public headers cross-built",
+            "Native PE/ELF; no Core build target; no target execution"
+          ],
+          [
+            "iOS arm64",
+            "Device static archive and Apple bridge cross-built",
+            "Mach-O IOS, minimum OS 15.0, SDK 27.0; no Core build target or device execution"
+          ]
+        ]
+      },
+      {
+        "block_id": "b000037",
+        "columns": [
+          "Configuration",
+          "Result",
+          "Evidence boundary"
+        ],
+        "rows": [
+          [
+            "macOS arm64 Release, source Core dependency",
+            "4/4 CTests",
+            "Hardware, bounded state, protocols and architecture policy; public headers and inventory example built"
+          ],
+          [
+            "macOS Debug/static, ASan + UBSan",
+            "4/4 CTests",
+            "Core and device C++ instrumented; native Objective-C++ bridge instrumented; C++ warnings treated as errors"
+          ],
+          [
+            "Independent build against installed Core",
+            "4/4 CTests",
+            "No Core source/tools required; imported Core supplies public include and link requirements"
+          ],
+          [
+            "Relocated installed device/Core consumer",
+            "3/3 CTests",
+            "Public API, protocols, native hardware contracts and FrameLoop coexist across the package boundary"
+          ],
+          [
+            "Core-only native regression",
+            "34/34 CTests",
+            "Retained runtime/value/I/O behavior, examples and device-boundary guard"
+          ],
+          [
+            "Core-only ASan + UBSan",
+            "12/12 focused CTests",
+            "FrameLoop/example, Runtime, Query, Thread, shared payloads, realtime, I/O, cleanup, reuse and ownership boundary"
+          ],
+          [
+            "Relocated Core-only consumer",
+            "13/13 CTests",
+            "Upgraded package imports no device target or PkgConfig; retained frame and I/O contracts"
+          ],
+          [
+            "Values-only installed consumer",
+            "3/3 CTests",
+            "No runtime, Threads or device dependency imports"
+          ],
+          [
+            "Emscripten pthreads, Node 24",
+            "3/3 CTests",
+            "Portable protocol/state and explicit unsupported hardware contracts; no browser device bridge"
+          ]
+        ]
+      },
+      {
+        "block_id": "b000045",
+        "columns": [
+          "Target",
+          "Verified output",
+          "Execution boundary"
+        ],
+        "rows": [
+          [
+            "Windows x64",
+            "PE32+ device/Core DLLs, three tests, inventory example and public headers",
+            "No Windows execution; this SDK uses the WinRT MIDI 1.0 fallback, so the optional Midi2-projection path is not covered by this cross-build"
+          ],
+          [
+            "Linux arm64",
+            "ELF device/Core libraries, three tests, inventory example and public headers",
+            "libudev/BlueZ D-Bus/ALSA implementation compiled and linked; no Linux execution"
+          ],
+          [
+            "Android arm64, API 26",
+            "NDK ELF libraries, three tests, inventory example and public headers",
+            "Portable unsupported hardware backend; no Android device execution"
+          ],
+          [
+            "iOS arm64",
+            "Device/Core static archives and native Apple bridge object",
+            "Mach-O, platform IOS, minimum OS 15.0, SDK 27.0; no device execution"
+          ],
+          [
+            "WASM32 pthreads",
+            "Static libraries, three test modules, inventory example and public headers",
+            "WebAssembly execution in Node; hardware host APIs unsupported"
+          ]
+        ]
+      }
+    ]
+  },
+  "provenance": {
+    "generator": "workspace-docs",
+    "version": "1.0.0",
+    "profile": "lossless-blocks-v1",
+    "derived": true
+  }
+}

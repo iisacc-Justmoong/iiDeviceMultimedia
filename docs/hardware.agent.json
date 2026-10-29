@@ -1,0 +1,722 @@
+{
+  "format": "iisacc.agent-document",
+  "schema_version": 1,
+  "document_id": "urn:iisacc:document:266f891bb11b523670cbffb1b53f3c03859a00abab724c64d356946d2f87fb08",
+  "project": {
+    "id": "urn:iisacc:project:SDK%2FiiDeviceMultimedia",
+    "name": "iiDeviceMultimedia",
+    "root": "SDK/iiDeviceMultimedia",
+    "kind": "sdk"
+  },
+  "source": {
+    "path": "docs/hardware.md",
+    "sha256": "355f168fb8faa74c344813b0b56120988c655778524e200f2db175d38c3693ea",
+    "bytes": 15798,
+    "line_count": 99,
+    "encoding": "utf-8",
+    "language": "en"
+  },
+  "document": {
+    "title": "Native hardware I/O",
+    "role": "guide",
+    "authority": "markdown_source"
+  },
+  "blocks": [
+    {
+      "id": "b000001",
+      "kind": "heading",
+      "start_line": 1,
+      "end_line": 1,
+      "raw": "# Native hardware I/O\n",
+      "level": 1,
+      "title": "Native hardware I/O"
+    },
+    {
+      "id": "b000002",
+      "kind": "blank",
+      "start_line": 2,
+      "end_line": 2,
+      "raw": "\n"
+    },
+    {
+      "id": "b000003",
+      "kind": "paragraph",
+      "start_line": 3,
+      "end_line": 7,
+      "raw": "iiDeviceMultimedia 0.2.0 owns USB/HID, BLE, PCM and UMP contracts independently\nof Core. Headers are `<iiDeviceMultimedia/IO/Hardware.h>`,\n`<iiDeviceMultimedia/IO/Protocols.h>` and `<iiDeviceMultimedia/IO/Result.h>`.\nTypes/errors use `ii::device` / `ii::device::protocol`. See\n[independence, application composition and migration](independence.md).\n"
+    },
+    {
+      "id": "b000004",
+      "kind": "blank",
+      "start_line": 8,
+      "end_line": 8,
+      "raw": "\n"
+    },
+    {
+      "id": "b000005",
+      "kind": "paragraph",
+      "start_line": 9,
+      "end_line": 12,
+      "raw": "`Hardware` connects native discovery, topology, control and media I/O to the\nhost's explicit `poll()` calls. Public records are final; native handles,\nObjective-C/WinRT objects and platform implementations stay private. No Core,\nQt, borrowed scheduler or application runtime is required.\n"
+    },
+    {
+      "id": "b000006",
+      "kind": "blank",
+      "start_line": 13,
+      "end_line": 13,
+      "raw": "\n"
+    },
+    {
+      "id": "b000007",
+      "kind": "heading",
+      "start_line": 14,
+      "end_line": 14,
+      "raw": "## Standards and scope\n",
+      "level": 2,
+      "title": "Standards and scope"
+    },
+    {
+      "id": "b000008",
+      "kind": "blank",
+      "start_line": 15,
+      "end_line": 15,
+      "raw": "\n"
+    },
+    {
+      "id": "b000009",
+      "kind": "paragraph",
+      "start_line": 16,
+      "end_line": 16,
+      "raw": "USB setup packets use the standard eight-byte little-endian control request format. `usb_control` supports standard, class and vendor requests through the OS USB host API. `usb_device_descriptor` decodes the standard device descriptor. Opening an endpoint does not detach a kernel driver or seize a device. Isochronous and bulk USB stream APIs are outside this version.\n"
+    },
+    {
+      "id": "b000010",
+      "kind": "blank",
+      "start_line": 17,
+      "end_line": 17,
+      "raw": "\n"
+    },
+    {
+      "id": "b000011",
+      "kind": "paragraph",
+      "start_line": 18,
+      "end_line": 18,
+      "raw": "HID uses [USB-IF HID 1.11 and HID Usage Tables 1.7](https://www.usb.org/hid), current when checked on 2026-10-06. The report descriptor parser supports short items, bounded global push/pop, usage pages/ranges, report IDs, collection nesting, input/output/feature fields, constants, arrays and signed packed values. Long items and unknown usages remain uninterpreted. The layout preserves numeric usage IDs rather than a fixed list of known products. `HIDLayout::decode/encode` uses actual bit widths and checks truncation, numeric ranges and duplicate assignments. Descriptor limits are 64 nesting levels, 65,536 bits per report and a caller-specified field cap (4,096 by default). Physical units, resolution scaling and named controls remain consumers' responsibilities.\n"
+    },
+    {
+      "id": "b000012",
+      "kind": "blank",
+      "start_line": 19,
+      "end_line": 19,
+      "raw": "\n"
+    },
+    {
+      "id": "b000013",
+      "kind": "paragraph",
+      "start_line": 20,
+      "end_line": 20,
+      "raw": "Bluetooth support is **Bluetooth LE central/GATT**: filtered service scanning, connection, characteristic read/write and notification subscription. UUIDs accept 16-, 32- and canonical 128-bit forms and are normalized to 128-bit text in events. The parser includes advertising AD length/type/value records (unknown types are preserved) and the standard Heart Rate Measurement characteristic. Bluetooth Classic RFCOMM, pairing UI, peripheral/server mode and arbitrary vendor profile semantics are outside this API. The relevant OS contracts are [CoreBluetooth](https://developer.apple.com/documentation/corebluetooth/cbcentralmanager), [BlueZ GATT](https://bluez.readthedocs.io/en/latest/gatt-api/) and [Windows GATT](https://learn.microsoft.com/en-us/windows/uwp/devices-sensors/gatt-client).\n"
+    },
+    {
+      "id": "b000014",
+      "kind": "blank",
+      "start_line": 21,
+      "end_line": 21,
+      "raw": "\n"
+    },
+    {
+      "id": "b000015",
+      "kind": "paragraph",
+      "start_line": 22,
+      "end_line": 22,
+      "raw": "Audio transfers interleaved float32 PCM, normally at 48 kHz, with explicit channel count and frame capacity. `audio_write` returns **samples**, not frames or bytes, and accepts partial writes. Capture events carry `samples`. `pcm_s16le` converts signed 16-bit little-endian PCM with finite-value validation and saturation. It does not implement synthesis, effects, file codecs or an audio mixing graph. Linux uses [ALSA PCM](https://www.alsa-project.org/alsa-doc/alsa-lib/group___p_c_m.html), including a configured PipeWire ALSA plugin when the host chooses one; this is not a native PipeWire graph client.\n"
+    },
+    {
+      "id": "b000016",
+      "kind": "blank",
+      "start_line": 23,
+      "end_line": 23,
+      "raw": "\n"
+    },
+    {
+      "id": "b000017",
+      "kind": "paragraph",
+      "start_line": 24,
+      "end_line": 24,
+      "raw": "MIDI transports native-endian 32-bit [Universal MIDI Packets](https://midi.org/midi-2-0) of one to four words. The framing decoder preserves message type and group, and the note decoder handles MIDI 1.0 and 2.0 notes. `MIDI1Decoder` supports incremental running status, interleaved realtime, bounded SysEx, status interruption and reset after malformed input. Reserved realtime bytes are ignored. `midi1_ump` converts individual channel/system messages; it does not segment SysEx byte streams into UMP. Native UMP transport passes SysEx7/SysEx8 and other well-framed packets unchanged; interpretation of their manufacturer payload is up to the consumer. Timestamp scheduling, MIDI-CI, property exchange and protocol negotiation are outside this version.\n"
+    },
+    {
+      "id": "b000018",
+      "kind": "blank",
+      "start_line": 25,
+      "end_line": 25,
+      "raw": "\n"
+    },
+    {
+      "id": "b000019",
+      "kind": "heading",
+      "start_line": 26,
+      "end_line": 26,
+      "raw": "## Platform backends\n",
+      "level": 2,
+      "title": "Platform backends"
+    },
+    {
+      "id": "b000020",
+      "kind": "blank",
+      "start_line": 27,
+      "end_line": 27,
+      "raw": "\n"
+    },
+    {
+      "id": "b000021",
+      "kind": "table",
+      "start_line": 28,
+      "end_line": 34,
+      "raw": "| Platform | USB/HID and topology | Bluetooth LE | Audio | MIDI |\n|---|---|---|---|---|\n| macOS | IOUSBHost control, IOHIDDevice reports/descriptor; IOKit matching/removal notifications | CoreBluetooth central, asynchronous service/characteristic discovery | AudioQueue float32, CoreAudio device IDs and device-change notifications | CoreMIDI protocol 2.0 receive/send, topology notifications, virtual source/destination |\n| Linux | libudev enumeration/monitor, usbfs control, hidraw descriptor/input/output/feature ioctls | BlueZ system D-Bus ObjectManager, discovery filters, GATT and property notifications | ALSA PCM nonblocking read/write, udev sound topology | ALSA UMP sequencer, announcements and virtual ports |\n| Windows | SetupAPI device interfaces, Configuration Manager notifications, WinUSB control, overlapped HID input and HidD reports | C++/WinRT BLE advertisement watcher and GATT | WASAPI shared-mode float32, MMDevice IDs and device watcher | `Windows.Devices.Midi2` UMP when projections/service exist; otherwise deployed WinRT MIDI 1.0 ports |\n| iOS | Generic USB host and raw HID APIs unavailable | CoreBluetooth | AudioQueue on the default session route; route-change notifications | CoreMIDI UMP and virtual endpoints |\n| Android / WASM | No Hardware device-family backend in this version | unsupported | unsupported | unsupported |\n",
+      "columns": [
+        "Platform",
+        "USB/HID and topology",
+        "Bluetooth LE",
+        "Audio",
+        "MIDI"
+      ],
+      "rows": [
+        [
+          "macOS",
+          "IOUSBHost control, IOHIDDevice reports/descriptor; IOKit matching/removal notifications",
+          "CoreBluetooth central, asynchronous service/characteristic discovery",
+          "AudioQueue float32, CoreAudio device IDs and device-change notifications",
+          "CoreMIDI protocol 2.0 receive/send, topology notifications, virtual source/destination"
+        ],
+        [
+          "Linux",
+          "libudev enumeration/monitor, usbfs control, hidraw descriptor/input/output/feature ioctls",
+          "BlueZ system D-Bus ObjectManager, discovery filters, GATT and property notifications",
+          "ALSA PCM nonblocking read/write, udev sound topology",
+          "ALSA UMP sequencer, announcements and virtual ports"
+        ],
+        [
+          "Windows",
+          "SetupAPI device interfaces, Configuration Manager notifications, WinUSB control, overlapped HID input and HidD reports",
+          "C++/WinRT BLE advertisement watcher and GATT",
+          "WASAPI shared-mode float32, MMDevice IDs and device watcher",
+          "`Windows.Devices.Midi2` UMP when projections/service exist; otherwise deployed WinRT MIDI 1.0 ports"
+        ],
+        [
+          "iOS",
+          "Generic USB host and raw HID APIs unavailable",
+          "CoreBluetooth",
+          "AudioQueue on the default session route; route-change notifications",
+          "CoreMIDI UMP and virtual endpoints"
+        ],
+        [
+          "Android / WASM",
+          "No Hardware device-family backend in this version",
+          "unsupported",
+          "unsupported",
+          "unsupported"
+        ]
+      ]
+    },
+    {
+      "id": "b000022",
+      "kind": "blank",
+      "start_line": 35,
+      "end_line": 35,
+      "raw": "\n"
+    },
+    {
+      "id": "b000023",
+      "kind": "paragraph",
+      "start_line": 36,
+      "end_line": 36,
+      "raw": "The Android/WASM limitation applies to `Hardware`; Core Channel file/serial I/O remains a separate optional contract. Protocol parsers and bounded dispatch state are portable and build on these targets. A browser WebUSB/WebHID/WebBluetooth/WebAudio/WebMIDI permission bridge and Android USB/Bluetooth/AAudio/AMidi host integration have not been implemented. An unsupported operation returns `ErrorCode::unsupported` rather than simulated device data.\n"
+    },
+    {
+      "id": "b000024",
+      "kind": "blank",
+      "start_line": 37,
+      "end_line": 37,
+      "raw": "\n"
+    },
+    {
+      "id": "b000025",
+      "kind": "paragraph",
+      "start_line": 38,
+      "end_line": 38,
+      "raw": "`hardware_capabilities()` reports compiled API support, not the presence of a controller, service, driver or permission. Enumeration may return an empty list or an availability error. IDs are OS-local endpoint identities and must not be assumed portable across computers. BLE discovery additions are radio observations; disappearance from scan results does not prove physical unplugging. Connection loss is a separate event. `watch(bluetooth)` is invalid: start a scan with explicit service UUID filters instead.\n"
+    },
+    {
+      "id": "b000026",
+      "kind": "blank",
+      "start_line": 39,
+      "end_line": 39,
+      "raw": "\n"
+    },
+    {
+      "id": "b000027",
+      "kind": "heading",
+      "start_line": 40,
+      "end_line": 40,
+      "raw": "### Build and host requirements\n",
+      "level": 3,
+      "title": "Build and host requirements"
+    },
+    {
+      "id": "b000028",
+      "kind": "blank",
+      "start_line": 41,
+      "end_line": 41,
+      "raw": "\n"
+    },
+    {
+      "id": "b000029",
+      "kind": "paragraph",
+      "start_line": 42,
+      "end_line": 42,
+      "raw": "Linux requires development/runtime libudev, libdbus-1 and ALSA **1.2.10 or later**. UMP sequencer support requires a compatible kernel (introduced in Linux 6.5); see [kernel MIDI 2.0 documentation](https://docs.kernel.org/sound/designs/midi-2.0.html). The installed CMake package propagates these dependencies for static consumers. Hardware access follows udev permissions and BlueZ D-Bus policy. HID ioctl sizes above 16,383 bytes are rejected to avoid encoding size overflow.\n"
+    },
+    {
+      "id": "b000030",
+      "kind": "blank",
+      "start_line": 43,
+      "end_line": 43,
+      "raw": "\n"
+    },
+    {
+      "id": "b000031",
+      "kind": "paragraph",
+      "start_line": 44,
+      "end_line": 44,
+      "raw": "Windows requires Windows SDK C++/WinRT headers. Native UMP is compiled when `winrt/Windows.Devices.Midi2.h` and its enumeration projections are available, and demands a running/available Windows MIDI Service through `MidiApi::EnsureServiceAvailable()`. Without these new SDK projections, the deployed `Windows.Devices.Midi` API supplies MIDI 1.0 input/output and DeviceWatcher hotplug. `hardware_capabilities().midi` remains true and `midi2` is false. MIDI 1.0 channel/system packets in group zero round-trip through the byte transport. Other groups, MIDI 2.0 packets and SysEx UMP segmentation are rejected rather than silently downconverted. The optional MIDI 2.0 path and the MIDI 1.0 path are explicit compiled capabilities; neither uses WinMM. The new in-box API rollout has platform/version requirements; availability must be verified on the target machine. See the [official SDK overview](https://microsoft.github.io/MIDI/sdk-overview/) and [current Microsoft C++ sample](https://github.com/microsoft/MIDI/blob/main/samples/cpp-winrt/static-enum-endpoints/main_static_enum_endpoints.cpp). Windows virtual MIDI creation is unsupported in this version.\n"
+    },
+    {
+      "id": "b000032",
+      "kind": "blank",
+      "start_line": 45,
+      "end_line": 45,
+      "raw": "\n"
+    },
+    {
+      "id": "b000033",
+      "kind": "paragraph",
+      "start_line": 46,
+      "end_line": 46,
+      "raw": "For WinUSB, the device must expose an interface bound to the WinUSB driver. Physical USB enumeration by itself does not imply that its returned physical device path supports `WinUsb_Initialize`. Set `HardwareOptions::usb_interface_guids` to the canonical GUIDs exposed by that driver's INF/descriptor; enumeration and hotplug then include those functional interface paths. This follows the [official WinUSB contract](https://learn.microsoft.com/en-us/windows-hardware/drivers/usbcon/using-winusb-api-to-communicate-with-a-usb-device). Windows provides HID parsed capabilities but no raw report-descriptor retrieval through HidD, so `hid_descriptor` is unsupported there; supplied descriptors still work with the common parser. Feature/input reads and feature/output writes are supported, subject to native driver permissions.\n"
+    },
+    {
+      "id": "b000034",
+      "kind": "blank",
+      "start_line": 47,
+      "end_line": 47,
+      "raw": "\n"
+    },
+    {
+      "id": "b000035",
+      "kind": "paragraph",
+      "start_line": 48,
+      "end_line": 48,
+      "raw": "Apple hosts declare `NSBluetoothAlwaysUsageDescription` before scanning and `NSMicrophoneUsageDescription` before capture. Missing usage descriptions return `permission_denied` before starting the corresponding service. The host handles OS consent and applicable sandbox entitlements. macOS HID may require Input Monitoring permission. iOS hosts configure and activate their `AVAudioSession`; the SDK does not replace the application's category/route policy. No permissions are bypassed by enumeration or opening.\n"
+    },
+    {
+      "id": "b000036",
+      "kind": "blank",
+      "start_line": 49,
+      "end_line": 49,
+      "raw": "\n"
+    },
+    {
+      "id": "b000037",
+      "kind": "heading",
+      "start_line": 50,
+      "end_line": 50,
+      "raw": "## Delivery, capacity and removal\n",
+      "level": 2,
+      "title": "Delivery, capacity and removal"
+    },
+    {
+      "id": "b000038",
+      "kind": "blank",
+      "start_line": 51,
+      "end_line": 51,
+      "raw": "\n"
+    },
+    {
+      "id": "b000039",
+      "kind": "paragraph",
+      "start_line": 52,
+      "end_line": 59,
+      "raw": "Native callbacks copy/enqueue data. The host calls `poll()` to serialize native\ncollection with commands, then deliver at most `dispatch_batch` events on its\ncalling thread. Zero deliveries is a successful poll. The host owns cadence;\nno automatic timer slot, generic worker pool or implicit event loop is created.\nThe previous `dispatch_interval` scheduling option is removed. Core applications\ncan schedule the call from their own EventLoop timer as shown in\n[independence.md](independence.md). Reentrant/concurrent polling returns busy;\nhandler exceptions propagate after all active bookkeeping is retired.\n"
+    },
+    {
+      "id": "b000040",
+      "kind": "blank",
+      "start_line": 60,
+      "end_line": 60,
+      "raw": "\n"
+    },
+    {
+      "id": "b000041",
+      "kind": "paragraph",
+      "start_line": 61,
+      "end_line": 61,
+      "raw": "`HardwareOptions` bounds queued events, active endpoints, total dynamic payload per event, dispatch batch. The default event/endpoint cap is 256 and per-event dynamic payload is 65,536 bytes, including bytes, PCM samples, UMP records and strings. Full/oversized events are dropped and counted in `HardwareStats::dropped`. Events admitted to the queue preserve FIFO order; topology events can also be dropped, so consumers reconcile with enumeration after overflow. BlueZ in-flight requests are bounded by the event cap. Returned enumeration vectors are snapshots and are not charged to the event queue.\n"
+    },
+    {
+      "id": "b000042",
+      "kind": "blank",
+      "start_line": 62,
+      "end_line": 62,
+      "raw": "\n"
+    },
+    {
+      "id": "b000043",
+      "kind": "paragraph",
+      "start_line": 63,
+      "end_line": 63,
+      "raw": "Apple native command/collector/destructor entry points and the private MIDI worker own autorelease pools, so command-line and C++ worker hosts do not leak temporary Foundation objects through a missing GUI pool. Apple audio callbacks use preallocated single-producer/single-consumer rings and AudioQueue buffers. They neither allocate nor lock to transfer samples. Overrun is reported from the collector; output starvation emits silence. Other native callback families may allocate bounded payload copies and use the queue mutex. The host poll dispatcher is separate from the audio realtime thread. Linux and Windows use nonblocking PCM pumps/available-buffer writes. ALSA buffer capacity/latency is negotiated by the OS; `queued_frames` is a requested capacity, not an exact guarantee on all drivers.\n"
+    },
+    {
+      "id": "b000044",
+      "kind": "blank",
+      "start_line": 64,
+      "end_line": 64,
+      "raw": "\n"
+    },
+    {
+      "id": "b000045",
+      "kind": "paragraph",
+      "start_line": 65,
+      "end_line": 65,
+      "raw": "The pure parser `midi1_message` rejects group loss, invalid data bits, and MIDI 2.0 downconversion when converting UMP for a byte-only port. Commands are serialized per hub and return typed errors. USB controls have an explicit 1–60,000 ms deadline. Native control calls and some OS enumeration/GATT calls can block; submit them to a host worker when the host requires responsive GUI/game dispatch. Windows media/WinRT commands require a host-initialized MTA caller and return `busy` from an STA or an uninitialized thread. The host keeps COM initialized until it has closed all hubs and released their media references, and closes those references from an initialized MTA. The SDK does not initialize/uninitialize COM around an individual call while retaining references beyond it. Already-running native calls are not preempted by a host scheduler budget.\n"
+    },
+    {
+      "id": "b000046",
+      "kind": "blank",
+      "start_line": 66,
+      "end_line": 66,
+      "raw": "\n"
+    },
+    {
+      "id": "b000047",
+      "kind": "paragraph",
+      "start_line": 67,
+      "end_line": 78,
+      "raw": "`close(endpoint)` succeeds only between active polls; otherwise it returns\nbusy without modifying the endpoint. Successful close releases native resources,\ndrops stale endpoint events and returns quota. Own-callback hub close returns\nbusy without stopping admission. Foreign hub close during active polling stops\nnew commands/events/polls and returns busy without waiting on another dispatcher.\nAfter the current handler and external driver retire, the owner retries close;\nremaining queued handlers are suppressed. Successful close joins native work and\nretires queued data/handler captures outside locks before returning. Repeated\nsuccessful close is idempotent; overlapping cleanup returns busy. See\n[independence.md](independence.md) for the complete lifetime contract. Destroying\na hub from its handler, while close is busy, or while another caller still uses\nit violates object lifetime and terminates.\n"
+    },
+    {
+      "id": "b000048",
+      "kind": "blank",
+      "start_line": 79,
+      "end_line": 79,
+      "raw": "\n"
+    },
+    {
+      "id": "b000049",
+      "kind": "paragraph",
+      "start_line": 80,
+      "end_line": 80,
+      "raw": "OS disconnect/stop commands can complete asynchronously (notably BLE); a successful local close proves the SDK has released its own endpoint and dispatch state, not that a remote peripheral has already observed the disconnect. CoreMIDI topology notifications use a private CFRunLoop on an owned `std::thread`, shared by active MIDI hubs and stopped/joined when the last hub closes. This allows headless host execution without pumping a GUI run loop. CoreMIDI may retain its original process notification context after all clients close, so watched MIDI topology also reconciles native enumeration every 100 ms. Notifications trigger an earlier scan; periodic reconciliation preserves addition/removal after complete pump recreation. Timing still depends on host pumping and native call duration. A host that initialized CoreMIDI earlier must keep its own original native notification run loop alive. Removing a MIDI virtual endpoint removes it from OS enumeration. Shared OS devices, pairing records, external storage and process allocator pages are not owned by this hub. Memory wiping and immediate RSS reduction are not removal guarantees.\n"
+    },
+    {
+      "id": "b000050",
+      "kind": "blank",
+      "start_line": 81,
+      "end_line": 81,
+      "raw": "\n"
+    },
+    {
+      "id": "b000051",
+      "kind": "heading",
+      "start_line": 82,
+      "end_line": 82,
+      "raw": "## Usage and verification\n",
+      "level": 2,
+      "title": "Usage and verification"
+    },
+    {
+      "id": "b000052",
+      "kind": "blank",
+      "start_line": 83,
+      "end_line": 83,
+      "raw": "\n"
+    },
+    {
+      "id": "b000053",
+      "kind": "fenced_code",
+      "start_line": 84,
+      "end_line": 97,
+      "raw": "```cpp\n#include <iiDeviceMultimedia/IO/Hardware.h>\nii::device::Hardware hardware( [](ii::device::HardwareEvent event) {\n    if (!event.midi.empty()) {\n        auto note = ii::device::protocol::note(event.midi.front());\n        if (note) { /* consume only the required fields */ }\n    }\n});\nauto inputs = hardware.enumerate(ii::device::DeviceKind::midi_input);\nif (inputs && !inputs->empty()) {\n    auto endpoint = hardware.open_midi(inputs->front().id);\n    // Pump hardware.poll(), then close the endpoint between polls.\n}\n```\n",
+      "language": "cpp",
+      "code": "#include <iiDeviceMultimedia/IO/Hardware.h>\nii::device::Hardware hardware( [](ii::device::HardwareEvent event) {\n    if (!event.midi.empty()) {\n        auto note = ii::device::protocol::note(event.midi.front());\n        if (note) { /* consume only the required fields */ }\n    }\n});\nauto inputs = hardware.enumerate(ii::device::DeviceKind::midi_input);\nif (inputs && !inputs->empty()) {\n    auto endpoint = hardware.open_midi(inputs->front().id);\n    // Pump hardware.poll(), then close the endpoint between polls.\n}\n",
+      "closed": true
+    },
+    {
+      "id": "b000054",
+      "kind": "blank",
+      "start_line": 98,
+      "end_line": 98,
+      "raw": "\n"
+    },
+    {
+      "id": "b000055",
+      "kind": "paragraph",
+      "start_line": 99,
+      "end_line": 99,
+      "raw": "`examples/hardware.cpp` performs read-only inventory without starting a scan or microphone. `tests/protocols.cpp` covers binary formats and malformed input. `tests/hardware_state.cpp` covers combined payload/capacity, stale callbacks, active-delivery quiescence, quota reuse and concurrent audio-ring order. `tests/hardware.cpp` checks public validation and available native enumeration; on macOS it creates a CoreMIDI destination, observes addition, sends MIDI 2.0 UMP through the OS, receives it through host polling, observes removal, and repeatedly reuses endpoint capacity. The test also closes every MIDI hub, recreates the native notification pump, receives another OS-routed message, and checks addition/removal again. Installed consumers repeat public protocol/hardware contracts. Source/build, native execution, cross-compilation and physical-device evidence are recorded separately in [validation.md](validation.md).\n"
+    }
+  ],
+  "outline": [
+    {
+      "block_id": "b000001",
+      "parent_id": null,
+      "level": 1,
+      "title": "Native hardware I/O",
+      "anchor": "native-hardware-io",
+      "start_line": 1
+    },
+    {
+      "block_id": "b000007",
+      "parent_id": "b000001",
+      "level": 2,
+      "title": "Standards and scope",
+      "anchor": "standards-and-scope",
+      "start_line": 14
+    },
+    {
+      "block_id": "b000019",
+      "parent_id": "b000001",
+      "level": 2,
+      "title": "Platform backends",
+      "anchor": "platform-backends",
+      "start_line": 26
+    },
+    {
+      "block_id": "b000027",
+      "parent_id": "b000019",
+      "level": 3,
+      "title": "Build and host requirements",
+      "anchor": "build-and-host-requirements",
+      "start_line": 40
+    },
+    {
+      "block_id": "b000037",
+      "parent_id": "b000001",
+      "level": 2,
+      "title": "Delivery, capacity and removal",
+      "anchor": "delivery-capacity-and-removal",
+      "start_line": 50
+    },
+    {
+      "block_id": "b000051",
+      "parent_id": "b000001",
+      "level": 2,
+      "title": "Usage and verification",
+      "anchor": "usage-and-verification",
+      "start_line": 82
+    }
+  ],
+  "indexes": {
+    "directive_candidates": [
+      {
+        "block_id": "b000005",
+        "line": 12,
+        "text": "Qt, borrowed scheduler or application runtime is required.",
+        "basis": "lexical_match",
+        "context": "paragraph"
+      },
+      {
+        "block_id": "b000025",
+        "line": 38,
+        "text": "`hardware_capabilities()` reports compiled API support, not the presence of a controller, service, driver or permission. Enumeration may return an empty list or an availability error. IDs are OS-local endpoint identities and must not be assumed portable across computers. BLE discovery additions are radio observations; disappearance from scan results does not prove physical unplugging. Connection loss is a separate event. `watch(bluetooth)` is invalid: start a scan with explicit service UUID filters instead.",
+        "basis": "lexical_match",
+        "context": "paragraph"
+      },
+      {
+        "block_id": "b000031",
+        "line": 44,
+        "text": "Windows requires Windows SDK C++/WinRT headers. Native UMP is compiled when `winrt/Windows.Devices.Midi2.h` and its enumeration projections are available, and demands a running/available Windows MIDI Service through `MidiApi::EnsureServiceAvailable()`. Without these new SDK projections, the deployed `Windows.Devices.Midi` API supplies MIDI 1.0 input/output and DeviceWatcher hotplug. `hardware_capabilities().midi` remains true and `midi2` is false. MIDI 1.0 channel/system packets in group zero round-trip through the byte transport. Other groups, MIDI 2.0 packets and SysEx UMP segmentation are rejected rather than silently downconverted. The optional MIDI 2.0 path and the MIDI 1.0 path are explicit compiled capabilities; neither uses WinMM. The new in-box API rollout has platform/version requirements; availability must be verified on the target machine. See the [official SDK overview](https://microsoft.github.io/MIDI/sdk-overview/) and [current Microsoft C++ sample](https://github.com/microsoft/MIDI/blob/main/samples/cpp-winrt/static-enum-endpoints/main_static_enum_endpoints.cpp). Windows virtual MIDI creation is unsupported in this version.",
+        "basis": "lexical_match",
+        "context": "paragraph"
+      },
+      {
+        "block_id": "b000033",
+        "line": 46,
+        "text": "For WinUSB, the device must expose an interface bound to the WinUSB driver. Physical USB enumeration by itself does not imply that its returned physical device path supports `WinUsb_Initialize`. Set `HardwareOptions::usb_interface_guids` to the canonical GUIDs exposed by that driver's INF/descriptor; enumeration and hotplug then include those functional interface paths. This follows the [official WinUSB contract](https://learn.microsoft.com/en-us/windows-hardware/drivers/usbcon/using-winusb-api-to-communicate-with-a-usb-device). Windows provides HID parsed capabilities but no raw report-descriptor retrieval through HidD, so `hid_descriptor` is unsupported there; supplied descriptors still work with the common parser. Feature/input reads and feature/output writes are supported, subject to native driver permissions.",
+        "basis": "lexical_match",
+        "context": "paragraph"
+      },
+      {
+        "block_id": "b000043",
+        "line": 63,
+        "text": "Apple native command/collector/destructor entry points and the private MIDI worker own autorelease pools, so command-line and C++ worker hosts do not leak temporary Foundation objects through a missing GUI pool. Apple audio callbacks use preallocated single-producer/single-consumer rings and AudioQueue buffers. They neither allocate nor lock to transfer samples. Overrun is reported from the collector; output starvation emits silence. Other native callback families may allocate bounded payload copies and use the queue mutex. The host poll dispatcher is separate from the audio realtime thread. Linux and Windows use nonblocking PCM pumps/available-buffer writes. ALSA buffer capacity/latency is negotiated by the OS; `queued_frames` is a requested capacity, not an exact guarantee on all drivers.",
+        "basis": "lexical_match",
+        "context": "paragraph"
+      },
+      {
+        "block_id": "b000049",
+        "line": 80,
+        "text": "OS disconnect/stop commands can complete asynchronously (notably BLE); a successful local close proves the SDK has released its own endpoint and dispatch state, not that a remote peripheral has already observed the disconnect. CoreMIDI topology notifications use a private CFRunLoop on an owned `std::thread`, shared by active MIDI hubs and stopped/joined when the last hub closes. This allows headless host execution without pumping a GUI run loop. CoreMIDI may retain its original process notification context after all clients close, so watched MIDI topology also reconciles native enumeration every 100 ms. Notifications trigger an earlier scan; periodic reconciliation preserves addition/removal after complete pump recreation. Timing still depends on host pumping and native call duration. A host that initialized CoreMIDI earlier must keep its own original native notification run loop alive. Removing a MIDI virtual endpoint removes it from OS enumeration. Shared OS devices, pairing records, external storage and process allocator pages are not owned by this hub. Memory wiping and immediate RSS reduction are not removal guarantees.",
+        "basis": "lexical_match",
+        "context": "paragraph"
+      }
+    ],
+    "commands": [],
+    "links": [
+      {
+        "block_id": "b000003",
+        "label": "independence, application composition and migration",
+        "target": "independence.md",
+        "kind": "relative",
+        "line": 7
+      },
+      {
+        "block_id": "b000011",
+        "label": "USB-IF HID 1.11 and HID Usage Tables 1.7",
+        "target": "https://www.usb.org/hid",
+        "kind": "external",
+        "line": 18
+      },
+      {
+        "block_id": "b000013",
+        "label": "CoreBluetooth",
+        "target": "https://developer.apple.com/documentation/corebluetooth/cbcentralmanager",
+        "kind": "external",
+        "line": 20
+      },
+      {
+        "block_id": "b000013",
+        "label": "BlueZ GATT",
+        "target": "https://bluez.readthedocs.io/en/latest/gatt-api/",
+        "kind": "external",
+        "line": 20
+      },
+      {
+        "block_id": "b000013",
+        "label": "Windows GATT",
+        "target": "https://learn.microsoft.com/en-us/windows/uwp/devices-sensors/gatt-client",
+        "kind": "external",
+        "line": 20
+      },
+      {
+        "block_id": "b000015",
+        "label": "ALSA PCM",
+        "target": "https://www.alsa-project.org/alsa-doc/alsa-lib/group___p_c_m.html",
+        "kind": "external",
+        "line": 22
+      },
+      {
+        "block_id": "b000017",
+        "label": "Universal MIDI Packets",
+        "target": "https://midi.org/midi-2-0",
+        "kind": "external",
+        "line": 24
+      },
+      {
+        "block_id": "b000029",
+        "label": "kernel MIDI 2.0 documentation",
+        "target": "https://docs.kernel.org/sound/designs/midi-2.0.html",
+        "kind": "external",
+        "line": 42
+      },
+      {
+        "block_id": "b000031",
+        "label": "official SDK overview",
+        "target": "https://microsoft.github.io/MIDI/sdk-overview/",
+        "kind": "external",
+        "line": 44
+      },
+      {
+        "block_id": "b000031",
+        "label": "current Microsoft C++ sample",
+        "target": "https://github.com/microsoft/MIDI/blob/main/samples/cpp-winrt/static-enum-endpoints/main_static_enum_endpoints.cpp",
+        "kind": "external",
+        "line": 44
+      },
+      {
+        "block_id": "b000033",
+        "label": "official WinUSB contract",
+        "target": "https://learn.microsoft.com/en-us/windows-hardware/drivers/usbcon/using-winusb-api-to-communicate-with-a-usb-device",
+        "kind": "external",
+        "line": 46
+      },
+      {
+        "block_id": "b000039",
+        "label": "independence.md",
+        "target": "independence.md",
+        "kind": "relative",
+        "line": 58
+      },
+      {
+        "block_id": "b000047",
+        "label": "independence.md",
+        "target": "independence.md",
+        "kind": "relative",
+        "line": 76
+      },
+      {
+        "block_id": "b000055",
+        "label": "validation.md",
+        "target": "validation.md",
+        "kind": "relative",
+        "line": 99
+      }
+    ],
+    "tables": [
+      {
+        "block_id": "b000021",
+        "columns": [
+          "Platform",
+          "USB/HID and topology",
+          "Bluetooth LE",
+          "Audio",
+          "MIDI"
+        ],
+        "rows": [
+          [
+            "macOS",
+            "IOUSBHost control, IOHIDDevice reports/descriptor; IOKit matching/removal notifications",
+            "CoreBluetooth central, asynchronous service/characteristic discovery",
+            "AudioQueue float32, CoreAudio device IDs and device-change notifications",
+            "CoreMIDI protocol 2.0 receive/send, topology notifications, virtual source/destination"
+          ],
+          [
+            "Linux",
+            "libudev enumeration/monitor, usbfs control, hidraw descriptor/input/output/feature ioctls",
+            "BlueZ system D-Bus ObjectManager, discovery filters, GATT and property notifications",
+            "ALSA PCM nonblocking read/write, udev sound topology",
+            "ALSA UMP sequencer, announcements and virtual ports"
+          ],
+          [
+            "Windows",
+            "SetupAPI device interfaces, Configuration Manager notifications, WinUSB control, overlapped HID input and HidD reports",
+            "C++/WinRT BLE advertisement watcher and GATT",
+            "WASAPI shared-mode float32, MMDevice IDs and device watcher",
+            "`Windows.Devices.Midi2` UMP when projections/service exist; otherwise deployed WinRT MIDI 1.0 ports"
+          ],
+          [
+            "iOS",
+            "Generic USB host and raw HID APIs unavailable",
+            "CoreBluetooth",
+            "AudioQueue on the default session route; route-change notifications",
+            "CoreMIDI UMP and virtual endpoints"
+          ],
+          [
+            "Android / WASM",
+            "No Hardware device-family backend in this version",
+            "unsupported",
+            "unsupported",
+            "unsupported"
+          ]
+        ]
+      }
+    ]
+  },
+  "provenance": {
+    "generator": "workspace-docs",
+    "version": "1.0.0",
+    "profile": "lossless-blocks-v1",
+    "derived": true
+  }
+}

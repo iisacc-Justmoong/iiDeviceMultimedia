@@ -1,0 +1,493 @@
+{
+  "format": "iisacc.agent-document",
+  "schema_version": 1,
+  "document_id": "urn:iisacc:document:b45df40b3c523912f4174ddb3b01f0b0eaee076ec651ed95a6ab852c572475ee",
+  "project": {
+    "id": "urn:iisacc:project:SDK%2FiiDeviceMultimedia",
+    "name": "iiDeviceMultimedia",
+    "root": "SDK/iiDeviceMultimedia",
+    "kind": "sdk"
+  },
+  "source": {
+    "path": "README.md",
+    "sha256": "d531d60dee7b8b7086e7944451672fc8a6e4ac8c870896e643fc373e9baff030",
+    "bytes": 3722,
+    "line_count": 87,
+    "encoding": "utf-8",
+    "language": "en"
+  },
+  "document": {
+    "title": "iiDeviceMultimedia",
+    "role": "overview",
+    "authority": "markdown_source"
+  },
+  "blocks": [
+    {
+      "id": "b000001",
+      "kind": "heading",
+      "start_line": 1,
+      "end_line": 1,
+      "raw": "# iiDeviceMultimedia\n",
+      "level": 1,
+      "title": "iiDeviceMultimedia"
+    },
+    {
+      "id": "b000002",
+      "kind": "blank",
+      "start_line": 2,
+      "end_line": 2,
+      "raw": "\n"
+    },
+    {
+      "id": "b000003",
+      "kind": "paragraph",
+      "start_line": 3,
+      "end_line": 3,
+      "raw": "[Windows build and execution](docs/WindowsBuildAndRun.md)\n"
+    },
+    {
+      "id": "b000004",
+      "kind": "blank",
+      "start_line": 4,
+      "end_line": 4,
+      "raw": "\n"
+    },
+    {
+      "id": "b000005",
+      "kind": "paragraph",
+      "start_line": 5,
+      "end_line": 7,
+      "raw": "Package release: **0.2.1** (2026-10-19). This patch packages the current\nsource snapshot; build, test and installation evidence is recorded in the SDK\npatch-release report. Earlier versioned feature notes remain historical.\n"
+    },
+    {
+      "id": "b000006",
+      "kind": "blank",
+      "start_line": 8,
+      "end_line": 9,
+      "raw": "\n\n"
+    },
+    {
+      "id": "b000007",
+      "kind": "paragraph",
+      "start_line": 10,
+      "end_line": 13,
+      "raw": "iiDeviceMultimedia is the standalone Qt-free native C++23 device/media module\nfor iiSDK. Version 0.2.1 owns USB/HID discovery, hotplug, control transfers and\nreports; Bluetooth LE central/GATT; interleaved float32 PCM input/output; and\nMIDI UMP transport/decoding. Its public namespace is `ii::device`.\n"
+    },
+    {
+      "id": "b000008",
+      "kind": "blank",
+      "start_line": 14,
+      "end_line": 14,
+      "raw": "\n"
+    },
+    {
+      "id": "b000009",
+      "kind": "paragraph",
+      "start_line": 15,
+      "end_line": 19,
+      "raw": "iiDeviceMultimedia and iiSDKCore are independent peer packages. Neither imports,\nlinks or calls the other. Apps can use both: Core supplies scheduling, frames and\ngeneric byte I/O; the app calls device `Hardware::poll()` from its chosen host\nloop. There is no duplicated generic runtime or hidden SDK adapter. See the\n[independence and composition contract](docs/independence.md).\n"
+    },
+    {
+      "id": "b000010",
+      "kind": "blank",
+      "start_line": 20,
+      "end_line": 20,
+      "raw": "\n"
+    },
+    {
+      "id": "b000011",
+      "kind": "heading",
+      "start_line": 21,
+      "end_line": 21,
+      "raw": "## Build and install\n",
+      "level": 2,
+      "title": "Build and install"
+    },
+    {
+      "id": "b000012",
+      "kind": "blank",
+      "start_line": 22,
+      "end_line": 22,
+      "raw": "\n"
+    },
+    {
+      "id": "b000013",
+      "kind": "paragraph",
+      "start_line": 23,
+      "end_line": 23,
+      "raw": "Use CMake 3.31+, C++23 and standard platform threads. Core is not required:\n"
+    },
+    {
+      "id": "b000014",
+      "kind": "blank",
+      "start_line": 24,
+      "end_line": 24,
+      "raw": "\n"
+    },
+    {
+      "id": "b000015",
+      "kind": "fenced_code",
+      "start_line": 25,
+      "end_line": 30,
+      "raw": "```sh\ncmake -S . -B build -DCMAKE_BUILD_TYPE=Release\ncmake --build build --parallel 4\nctest --test-dir build --output-on-failure\ncmake --install build --prefix \"$PWD/build/stage\"\n```\n",
+      "language": "sh",
+      "code": "cmake -S . -B build -DCMAKE_BUILD_TYPE=Release\ncmake --build build --parallel 4\nctest --test-dir build --output-on-failure\ncmake --install build --prefix \"$PWD/build/stage\"\n",
+      "closed": true
+    },
+    {
+      "id": "b000016",
+      "kind": "blank",
+      "start_line": 31,
+      "end_line": 31,
+      "raw": "\n"
+    },
+    {
+      "id": "b000017",
+      "kind": "paragraph",
+      "start_line": 32,
+      "end_line": 38,
+      "raw": "Apple uses its native frameworks. Windows requires Windows SDK C++/WinRT device\nprojections; native MIDI 2.0 additionally requires its optional projections and\nservice. Linux requires libudev, D-Bus and ALSA >=1.2.10 development packages.\niOS and Emscripten use static libraries. Emscripten publishes C++ exception flags\nand defaults `IIDEVICEMULTIMEDIA_WASM_THREADS` to ON; a single-thread host can\nexplicitly disable it. The Python architecture checker is a build tool, not an\napplication runtime.\n"
+    },
+    {
+      "id": "b000018",
+      "kind": "blank",
+      "start_line": 39,
+      "end_line": 39,
+      "raw": "\n"
+    },
+    {
+      "id": "b000019",
+      "kind": "heading",
+      "start_line": 40,
+      "end_line": 40,
+      "raw": "## Consume independently\n",
+      "level": 2,
+      "title": "Consume independently"
+    },
+    {
+      "id": "b000020",
+      "kind": "blank",
+      "start_line": 41,
+      "end_line": 41,
+      "raw": "\n"
+    },
+    {
+      "id": "b000021",
+      "kind": "fenced_code",
+      "start_line": 42,
+      "end_line": 45,
+      "raw": "```cmake\nfind_package(iiDeviceMultimedia 0.2 CONFIG REQUIRED)\ntarget_link_libraries(app PRIVATE iiDeviceMultimedia::iiDeviceMultimedia)\n```\n",
+      "language": "cmake",
+      "code": "find_package(iiDeviceMultimedia 0.2 CONFIG REQUIRED)\ntarget_link_libraries(app PRIVATE iiDeviceMultimedia::iiDeviceMultimedia)\n",
+      "closed": true
+    },
+    {
+      "id": "b000022",
+      "kind": "blank",
+      "start_line": 46,
+      "end_line": 46,
+      "raw": "\n"
+    },
+    {
+      "id": "b000023",
+      "kind": "fenced_code",
+      "start_line": 47,
+      "end_line": 56,
+      "raw": "```cpp\n#include <iiDeviceMultimedia/IO/Hardware.h>\n#include <iiDeviceMultimedia/IO/Protocols.h>\n\nii::device::Hardware devices([](ii::device::HardwareEvent event) {\n    // Runs on the thread that calls poll().\n});\nconst auto result = devices.poll();\nconst auto closed = devices.close();\n```\n",
+      "language": "cpp",
+      "code": "#include <iiDeviceMultimedia/IO/Hardware.h>\n#include <iiDeviceMultimedia/IO/Protocols.h>\n\nii::device::Hardware devices([](ii::device::HardwareEvent event) {\n    // Runs on the thread that calls poll().\n});\nconst auto result = devices.poll();\nconst auto closed = devices.close();\n",
+      "closed": true
+    },
+    {
+      "id": "b000024",
+      "kind": "blank",
+      "start_line": 57,
+      "end_line": 57,
+      "raw": "\n"
+    },
+    {
+      "id": "b000025",
+      "kind": "paragraph",
+      "start_line": 58,
+      "end_line": 64,
+      "raw": "`IO/Result.h` owns device errors independently of Core's `ii::io` errors. A poll\ncollects native input and dispatches a bounded batch; the host chooses cadence.\nApps using Core explicitly find/link both packages and own a timer that calls\n`devices.poll()`. Examples and teardown requirements are in\n[composition](docs/independence.md). The separate `tests/composition` application\nverifies both package/header orders, Core FrameLoop/Channel coexistence and native\nUMP delivery through an application-owned Core timer.\n"
+    },
+    {
+      "id": "b000026",
+      "kind": "blank",
+      "start_line": 65,
+      "end_line": 65,
+      "raw": "\n"
+    },
+    {
+      "id": "b000027",
+      "kind": "paragraph",
+      "start_line": 66,
+      "end_line": 70,
+      "raw": "Compiled capabilities do not prove permissions, device presence or physical\noperation. Generic raw USB/HID is unavailable on iOS; Android/WASM hardware host\nbridges are unsupported. Protocols and bounded dispatch remain portable. See the\n[hardware contract](docs/hardware.md), [0.1-to-0.2 migration](docs/independence.md),\n[extraction history](docs/extraction.md) and [validation](docs/validation.md).\n"
+    },
+    {
+      "id": "b000028",
+      "kind": "blank",
+      "start_line": 71,
+      "end_line": 71,
+      "raw": "\n"
+    },
+    {
+      "id": "b000029",
+      "kind": "heading",
+      "start_line": 72,
+      "end_line": 72,
+      "raw": "## License\n",
+      "level": 2,
+      "title": "License"
+    },
+    {
+      "id": "b000030",
+      "kind": "blank",
+      "start_line": 73,
+      "end_line": 73,
+      "raw": "\n"
+    },
+    {
+      "id": "b000031",
+      "kind": "paragraph",
+      "start_line": 74,
+      "end_line": 74,
+      "raw": "SPDX-License-Identifier: MIT\n"
+    },
+    {
+      "id": "b000032",
+      "kind": "blank",
+      "start_line": 75,
+      "end_line": 75,
+      "raw": "\n"
+    },
+    {
+      "id": "b000033",
+      "kind": "paragraph",
+      "start_line": 76,
+      "end_line": 78,
+      "raw": "The original code and documentation in this repository are licensed under the\n[MIT License](LICENSE). Third-party code, libraries, fonts, tools, and model\nweights retain their respective licenses.\n"
+    },
+    {
+      "id": "b000034",
+      "kind": "blank",
+      "start_line": 79,
+      "end_line": 79,
+      "raw": "\n"
+    },
+    {
+      "id": "b000035",
+      "kind": "html",
+      "start_line": 80,
+      "end_line": 80,
+      "raw": "<!-- workspace-docs:readme:start -->\n"
+    },
+    {
+      "id": "b000036",
+      "kind": "heading",
+      "start_line": 81,
+      "end_line": 81,
+      "raw": "## Documentation entry points\n",
+      "level": 2,
+      "title": "Documentation entry points"
+    },
+    {
+      "id": "b000037",
+      "kind": "blank",
+      "start_line": 82,
+      "end_line": 82,
+      "raw": "\n"
+    },
+    {
+      "id": "b000038",
+      "kind": "list",
+      "start_line": 83,
+      "end_line": 86,
+      "raw": "- Human overview: this English `README.md`.\n- Agent instructions: [AGENT.md](AGENT.md).\n- Human documentation: [documentation index](docs/README.md).\n- Structured agent documentation: [agent index](docs/agent-index.json).\n",
+      "items": [
+        {
+          "marker": "-",
+          "text": "Human overview: this English `README.md`.",
+          "checked": null
+        },
+        {
+          "marker": "-",
+          "text": "Agent instructions: [AGENT.md](AGENT.md).",
+          "checked": null
+        },
+        {
+          "marker": "-",
+          "text": "Human documentation: [documentation index](docs/README.md).",
+          "checked": null
+        },
+        {
+          "marker": "-",
+          "text": "Structured agent documentation: [agent index](docs/agent-index.json).",
+          "checked": null
+        }
+      ]
+    },
+    {
+      "id": "b000039",
+      "kind": "html",
+      "start_line": 87,
+      "end_line": 87,
+      "raw": "<!-- workspace-docs:readme:end -->\n"
+    }
+  ],
+  "outline": [
+    {
+      "block_id": "b000001",
+      "parent_id": null,
+      "level": 1,
+      "title": "iiDeviceMultimedia",
+      "anchor": "iidevicemultimedia",
+      "start_line": 1
+    },
+    {
+      "block_id": "b000011",
+      "parent_id": "b000001",
+      "level": 2,
+      "title": "Build and install",
+      "anchor": "build-and-install",
+      "start_line": 21
+    },
+    {
+      "block_id": "b000019",
+      "parent_id": "b000001",
+      "level": 2,
+      "title": "Consume independently",
+      "anchor": "consume-independently",
+      "start_line": 40
+    },
+    {
+      "block_id": "b000029",
+      "parent_id": "b000001",
+      "level": 2,
+      "title": "License",
+      "anchor": "license",
+      "start_line": 72
+    },
+    {
+      "block_id": "b000036",
+      "parent_id": "b000001",
+      "level": 2,
+      "title": "Documentation entry points",
+      "anchor": "documentation-entry-points",
+      "start_line": 81
+    }
+  ],
+  "indexes": {
+    "directive_candidates": [
+      {
+        "block_id": "b000013",
+        "line": 23,
+        "text": "Use CMake 3.31+, C++23 and standard platform threads. Core is not required:",
+        "basis": "lexical_match",
+        "context": "paragraph"
+      },
+      {
+        "block_id": "b000027",
+        "line": 66,
+        "text": "Compiled capabilities do not prove permissions, device presence or physical",
+        "basis": "lexical_match",
+        "context": "paragraph"
+      }
+    ],
+    "commands": [
+      {
+        "block_id": "b000015",
+        "language": "sh",
+        "code": "cmake -S . -B build -DCMAKE_BUILD_TYPE=Release\ncmake --build build --parallel 4\nctest --test-dir build --output-on-failure\ncmake --install build --prefix \"$PWD/build/stage\"\n"
+      }
+    ],
+    "links": [
+      {
+        "block_id": "b000003",
+        "label": "Windows build and execution",
+        "target": "docs/WindowsBuildAndRun.md",
+        "kind": "relative",
+        "line": 3
+      },
+      {
+        "block_id": "b000009",
+        "label": "independence and composition contract",
+        "target": "docs/independence.md",
+        "kind": "relative",
+        "line": 19
+      },
+      {
+        "block_id": "b000025",
+        "label": "composition",
+        "target": "docs/independence.md",
+        "kind": "relative",
+        "line": 62
+      },
+      {
+        "block_id": "b000027",
+        "label": "hardware contract",
+        "target": "docs/hardware.md",
+        "kind": "relative",
+        "line": 69
+      },
+      {
+        "block_id": "b000027",
+        "label": "0.1-to-0.2 migration",
+        "target": "docs/independence.md",
+        "kind": "relative",
+        "line": 69
+      },
+      {
+        "block_id": "b000027",
+        "label": "extraction history",
+        "target": "docs/extraction.md",
+        "kind": "relative",
+        "line": 70
+      },
+      {
+        "block_id": "b000027",
+        "label": "validation",
+        "target": "docs/validation.md",
+        "kind": "relative",
+        "line": 70
+      },
+      {
+        "block_id": "b000033",
+        "label": "MIT License",
+        "target": "LICENSE",
+        "kind": "relative",
+        "line": 77
+      },
+      {
+        "block_id": "b000038",
+        "label": "AGENT.md",
+        "target": "AGENT.md",
+        "kind": "relative",
+        "line": 84
+      },
+      {
+        "block_id": "b000038",
+        "label": "documentation index",
+        "target": "docs/README.md",
+        "kind": "relative",
+        "line": 85
+      },
+      {
+        "block_id": "b000038",
+        "label": "agent index",
+        "target": "docs/agent-index.json",
+        "kind": "relative",
+        "line": 86
+      }
+    ],
+    "tables": []
+  },
+  "provenance": {
+    "generator": "workspace-docs",
+    "version": "1.0.0",
+    "profile": "lossless-blocks-v1",
+    "derived": true
+  }
+}

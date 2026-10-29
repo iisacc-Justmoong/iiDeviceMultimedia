@@ -1,0 +1,271 @@
+{
+  "format": "iisacc.agent-document",
+  "schema_version": 1,
+  "document_id": "urn:iisacc:document:74a1a50f43dab0ae44ae100826bc166f468fa6c995b0f0c7093e97c1683f5a44",
+  "project": {
+    "id": "urn:iisacc:project:SDK%2FiiDeviceMultimedia",
+    "name": "iiDeviceMultimedia",
+    "root": "SDK/iiDeviceMultimedia",
+    "kind": "sdk"
+  },
+  "source": {
+    "path": "docs/extraction.md",
+    "sha256": "eba9ccc6f23219c71c04129139c62bbd64b627059e3f354cb38b97a64a015fff",
+    "bytes": 2945,
+    "line_count": 50,
+    "encoding": "utf-8",
+    "language": "en"
+  },
+  "document": {
+    "title": "Device/media extraction history",
+    "role": "guide",
+    "authority": "markdown_source"
+  },
+  "blocks": [
+    {
+      "id": "b000001",
+      "kind": "heading",
+      "start_line": 1,
+      "end_line": 1,
+      "raw": "# Device/media extraction history\n",
+      "level": 1,
+      "title": "Device/media extraction history"
+    },
+    {
+      "id": "b000002",
+      "kind": "blank",
+      "start_line": 2,
+      "end_line": 2,
+      "raw": "\n"
+    },
+    {
+      "id": "b000003",
+      "kind": "paragraph",
+      "start_line": 3,
+      "end_line": 7,
+      "raw": "Current contract: iiDeviceMultimedia 0.2.0 and Core 0.12 are independent peers.\nDevice APIs/errors use `ii::device`, the host owns the `poll()` driver, and no\npackage imports the other. Follow [independence and migration](independence.md).\nThe following 0.1 extraction record describes the earlier intermediate boundary;\nits Core dependency, constructor, namespace and minimum-version rules are historical.\n"
+    },
+    {
+      "id": "b000004",
+      "kind": "blank",
+      "start_line": 8,
+      "end_line": 8,
+      "raw": "\n"
+    },
+    {
+      "id": "b000005",
+      "kind": "heading",
+      "start_line": 9,
+      "end_line": 9,
+      "raw": "# Extraction and migration\n",
+      "level": 1,
+      "title": "Extraction and migration"
+    },
+    {
+      "id": "b000006",
+      "kind": "blank",
+      "start_line": 10,
+      "end_line": 10,
+      "raw": "\n"
+    },
+    {
+      "id": "b000007",
+      "kind": "paragraph",
+      "start_line": 11,
+      "end_line": 14,
+      "raw": "iiDeviceMultimedia 0.1.0 / iiSDKCore 0.12.0 separate device/media responsibility\nfrom generic runtime and byte I/O. No device algorithms or backend semantics are\nrewritten. The moved families are USB/HID, BLE central/GATT, float32 PCM and MIDI\nUMP, including their protocol parsers and private platform implementations.\n"
+    },
+    {
+      "id": "b000008",
+      "kind": "blank",
+      "start_line": 15,
+      "end_line": 15,
+      "raw": "\n"
+    },
+    {
+      "id": "b000009",
+      "kind": "table",
+      "start_line": 16,
+      "end_line": 21,
+      "raw": "| Former Core file family | New location |\n| --- | --- |\n| `src/IO/Hardware*` | `iiDeviceMultimedia/src/IO/Hardware*` |\n| `src/IO/Protocols.h/.cpp` | `iiDeviceMultimedia/src/IO/Protocols.h/.cpp` |\n| Hardware, state and protocol tests | `iiDeviceMultimedia/tests/` |\n| Hardware example and contract | `iiDeviceMultimedia/examples/` and `docs/` |\n",
+      "columns": [
+        "Former Core file family",
+        "New location"
+      ],
+      "rows": [
+        [
+          "`src/IO/Hardware*`",
+          "`iiDeviceMultimedia/src/IO/Hardware*`"
+        ],
+        [
+          "`src/IO/Protocols.h/.cpp`",
+          "`iiDeviceMultimedia/src/IO/Protocols.h/.cpp`"
+        ],
+        [
+          "Hardware, state and protocol tests",
+          "`iiDeviceMultimedia/tests/`"
+        ],
+        [
+          "Hardware example and contract",
+          "`iiDeviceMultimedia/examples/` and `docs/`"
+        ]
+      ]
+    },
+    {
+      "id": "b000010",
+      "kind": "blank",
+      "start_line": 22,
+      "end_line": 22,
+      "raw": "\n"
+    },
+    {
+      "id": "b000011",
+      "kind": "paragraph",
+      "start_line": 23,
+      "end_line": 29,
+      "raw": "The stable C++ names `ii::io::Hardware`, device records and `ii::io::protocol`\nremain unchanged. Update public includes from `iiSDKCore/IO/Hardware.h` and\n`iiSDKCore/IO/Protocols.h` to the corresponding `iiDeviceMultimedia/IO/` paths.\nLink `iiDeviceMultimedia::iiDeviceMultimedia`; its package imports Core 0.12+.\nDo not combine this package with a pre-extraction Core that still exports device\nsymbols. Existing hardware consumers must rebuild and relink. Generic Core APIs\nand behavior remain unchanged; Core-only consumers need no device package.\n"
+    },
+    {
+      "id": "b000012",
+      "kind": "blank",
+      "start_line": 30,
+      "end_line": 30,
+      "raw": "\n"
+    },
+    {
+      "id": "b000013",
+      "kind": "paragraph",
+      "start_line": 31,
+      "end_line": 36,
+      "raw": "No forwarding header or Core dependency on the new module is introduced. Core\nconfiguration removes its two stale generated device headers; installing Core\n0.12 removes exactly those obsolete headers formerly owned by Core in that\nprefix, including DESTDIR staging. It does not remove the prefix or unrelated\nfiles. Validation covers a Core 0.11-to-0.12 prefix upgrade and fresh, relocated\ndevice-package consumption.\n"
+    },
+    {
+      "id": "b000014",
+      "kind": "blank",
+      "start_line": 37,
+      "end_line": 37,
+      "raw": "\n"
+    },
+    {
+      "id": "b000015",
+      "kind": "paragraph",
+      "start_line": 38,
+      "end_line": 41,
+      "raw": "Apple frameworks, Windows device/WinRT libraries and Linux libudev/D-Bus/ALSA\ndependency discovery move with their backends. Core retains standard threading,\ngeneric file/serial I/O, poll/wake, tasks/queries, FrameLoop and plugins. Public\ndevice headers use only Core's installed API, never its private sources.\n"
+    },
+    {
+      "id": "b000016",
+      "kind": "blank",
+      "start_line": 42,
+      "end_line": 42,
+      "raw": "\n"
+    },
+    {
+      "id": "b000017",
+      "kind": "paragraph",
+      "start_line": 43,
+      "end_line": 46,
+      "raw": "The module has its own source/preprocessor architecture gate and regression\nfixtures, extracted from the existing proven Core policy. The scanner snapshot\nis unchanged; its local CMake target names and public-type fixtures are module\nspecific. Building from an installed Core does not require Core source/tools.\n"
+    },
+    {
+      "id": "b000018",
+      "kind": "blank",
+      "start_line": 47,
+      "end_line": 47,
+      "raw": "\n"
+    },
+    {
+      "id": "b000019",
+      "kind": "paragraph",
+      "start_line": 48,
+      "end_line": 50,
+      "raw": "Current support boundaries are preserved: iOS has no generic raw USB/HID host\nAPI, Android/WASM hardware host bridges are not implemented, and software tests\nare not physical-device or every-OS execution proof.\n"
+    }
+  ],
+  "outline": [
+    {
+      "block_id": "b000001",
+      "parent_id": null,
+      "level": 1,
+      "title": "Device/media extraction history",
+      "anchor": "devicemedia-extraction-history",
+      "start_line": 1
+    },
+    {
+      "block_id": "b000005",
+      "parent_id": null,
+      "level": 1,
+      "title": "Extraction and migration",
+      "anchor": "extraction-and-migration",
+      "start_line": 9
+    }
+  ],
+  "indexes": {
+    "directive_candidates": [
+      {
+        "block_id": "b000011",
+        "line": 27,
+        "text": "Do not combine this package with a pre-extraction Core that still exports device",
+        "basis": "lexical_match",
+        "context": "paragraph"
+      },
+      {
+        "block_id": "b000011",
+        "line": 28,
+        "text": "symbols. Existing hardware consumers must rebuild and relink. Generic Core APIs",
+        "basis": "lexical_match",
+        "context": "paragraph"
+      },
+      {
+        "block_id": "b000015",
+        "line": 41,
+        "text": "device headers use only Core's installed API, never its private sources.",
+        "basis": "lexical_match",
+        "context": "paragraph"
+      }
+    ],
+    "commands": [],
+    "links": [
+      {
+        "block_id": "b000003",
+        "label": "independence and migration",
+        "target": "independence.md",
+        "kind": "relative",
+        "line": 5
+      }
+    ],
+    "tables": [
+      {
+        "block_id": "b000009",
+        "columns": [
+          "Former Core file family",
+          "New location"
+        ],
+        "rows": [
+          [
+            "`src/IO/Hardware*`",
+            "`iiDeviceMultimedia/src/IO/Hardware*`"
+          ],
+          [
+            "`src/IO/Protocols.h/.cpp`",
+            "`iiDeviceMultimedia/src/IO/Protocols.h/.cpp`"
+          ],
+          [
+            "Hardware, state and protocol tests",
+            "`iiDeviceMultimedia/tests/`"
+          ],
+          [
+            "Hardware example and contract",
+            "`iiDeviceMultimedia/examples/` and `docs/`"
+          ]
+        ]
+      }
+    ]
+  },
+  "provenance": {
+    "generator": "workspace-docs",
+    "version": "1.0.0",
+    "profile": "lossless-blocks-v1",
+    "derived": true
+  }
+}

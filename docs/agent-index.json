@@ -1,0 +1,97 @@
+{
+  "format": "iisacc.agent-document-index",
+  "schema_version": 1,
+  "project": {
+    "id": "urn:iisacc:project:SDK%2FiiDeviceMultimedia",
+    "name": "iiDeviceMultimedia",
+    "root": "SDK/iiDeviceMultimedia",
+    "kind": "sdk"
+  },
+  "documentation_root": "docs",
+  "agent_schema": "docs/agent-document.schema.json",
+  "documents": [
+    {
+      "document_id": "urn:iisacc:document:b4893d3068b31d0a488cb152bc72ba027efb3c657fbc91317a5dc0e1d111dad3",
+      "source": "AGENT.md",
+      "agent_json": "docs/entrypoints/AGENT.agent.json",
+      "source_sha256": "6ba88add777b95adeb2109094974af338270e6214f752ca9b80323e5be0593b9",
+      "role": "instructions"
+    },
+    {
+      "document_id": "urn:iisacc:document:b45df40b3c523912f4174ddb3b01f0b0eaee076ec651ed95a6ab852c572475ee",
+      "source": "README.md",
+      "agent_json": "docs/entrypoints/README.agent.json",
+      "source_sha256": "d531d60dee7b8b7086e7944451672fc8a6e4ac8c870896e643fc373e9baff030",
+      "role": "overview"
+    },
+    {
+      "document_id": "urn:iisacc:document:1a654a8f14fccaa2f42ba25ab1d5c5dbeb443b9334d556daf4bd3d6a390101f2",
+      "source": "docs/README.md",
+      "agent_json": "docs/README.agent.json",
+      "source_sha256": "f73e5493595ded236039d81c7c6f8198c3a21dc7c55dc5d2642e1e7cc1dd81e9",
+      "role": "overview"
+    },
+    {
+      "document_id": "urn:iisacc:document:2400579a60493a214c6c5343fbc5e0eadad492b3e0eecbcc8ab7168d94c6d8c6",
+      "source": "docs/Windows.md",
+      "agent_json": "docs/Windows.agent.json",
+      "source_sha256": "86e08aa0a2bbec89f434e34df88a3888f6413a72ef412d48322a6944e3137b6e",
+      "role": "guide"
+    },
+    {
+      "document_id": "urn:iisacc:document:8c7233d8a5d398954b917f1918797d8d92c53ff10a43d585f78062bb85a0ac44",
+      "source": "docs/WindowsBuildAndRun.md",
+      "agent_json": "docs/WindowsBuildAndRun.agent.json",
+      "source_sha256": "25a5356819f7f02788af6a2db7630e73386c76570dd3256c127dff0679ac8e61",
+      "role": "guide"
+    },
+    {
+      "document_id": "urn:iisacc:document:0aa08a2ab2f761410bcd20c6cb97b5a8b53ec751ea07cee8e4427b833a770756",
+      "source": "docs/documentation-structure.md",
+      "agent_json": "docs/documentation-structure.agent.json",
+      "source_sha256": "d2b50f98dedf23ebd875d2428d9f48fb7a12251130515e8501efc5d99379f485",
+      "role": "guide"
+    },
+    {
+      "document_id": "urn:iisacc:document:74a1a50f43dab0ae44ae100826bc166f468fa6c995b0f0c7093e97c1683f5a44",
+      "source": "docs/extraction.md",
+      "agent_json": "docs/extraction.agent.json",
+      "source_sha256": "eba9ccc6f23219c71c04129139c62bbd64b627059e3f354cb38b97a64a015fff",
+      "role": "guide"
+    },
+    {
+      "document_id": "urn:iisacc:document:266f891bb11b523670cbffb1b53f3c03859a00abab724c64d356946d2f87fb08",
+      "source": "docs/hardware.md",
+      "agent_json": "docs/hardware.agent.json",
+      "source_sha256": "355f168fb8faa74c344813b0b56120988c655778524e200f2db175d38c3693ea",
+      "role": "guide"
+    },
+    {
+      "document_id": "urn:iisacc:document:225b9c65bfd1d327ba5b1bde10b0a021b45dc796346244cd3f8afccbfe0fb824",
+      "source": "docs/independence.md",
+      "agent_json": "docs/independence.agent.json",
+      "source_sha256": "833d3d0d9bc09da4ed5d12ff90d97ad54dc41a33c7ff277301cb9147bbd86d81",
+      "role": "guide"
+    },
+    {
+      "document_id": "urn:iisacc:document:6f11709cd1b437e9b71d82d59c1c74de66fc0723fe04fb2faa8df53bd700f818",
+      "source": "docs/validation.md",
+      "agent_json": "docs/validation.agent.json",
+      "source_sha256": "93e13cd873311601d7b779269bb333004fa35174991cd318132a24c782d78b62",
+      "role": "guide"
+    }
+  ],
+  "layout": {
+    "human_entry": "README.md",
+    "agent_entry": "AGENT.md",
+    "human_format": "markdown",
+    "agent_format": "structured_json",
+    "source_authority": "markdown"
+  },
+  "provenance": {
+    "generator": "workspace-docs",
+    "version": "1.0.0",
+    "profile": "lossless-blocks-v1",
+    "derived": true
+  }
+}
