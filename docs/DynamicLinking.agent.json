@@ -1,0 +1,93 @@
+{
+  "format": "iisacc.agent-document",
+  "schema_version": 1,
+  "document_id": "urn:iisacc:document:45a4d2717faf12c2555f8b18b5b8f9228fea2f6c13f77046fb1bbbf39b16a0bb",
+  "project": {
+    "id": "urn:iisacc:project:SDK%2FiiDeviceMultimedia",
+    "name": "iiDeviceMultimedia",
+    "root": "SDK/iiDeviceMultimedia",
+    "kind": "sdk"
+  },
+  "source": {
+    "path": "docs/DynamicLinking.md",
+    "sha256": "5d382c3e36bf252ed6e3b2482e5526a15b4d603544b1d83dc437ef0831f7f509",
+    "bytes": 531,
+    "line_count": 5,
+    "encoding": "utf-8",
+    "language": "ko"
+  },
+  "document": {
+    "title": "동적 라이브러리 빌드",
+    "role": "guide",
+    "authority": "markdown_source"
+  },
+  "blocks": [
+    {
+      "id": "b000001",
+      "kind": "heading",
+      "start_line": 1,
+      "end_line": 1,
+      "raw": "# 동적 라이브러리 빌드\n",
+      "level": 1,
+      "title": "동적 라이브러리 빌드"
+    },
+    {
+      "id": "b000002",
+      "kind": "blank",
+      "start_line": 2,
+      "end_line": 2,
+      "raw": "\n"
+    },
+    {
+      "id": "b000003",
+      "kind": "paragraph",
+      "start_line": 3,
+      "end_line": 3,
+      "raw": "장치 및 멀티미디어 모듈은 기본적으로 공유 라이브러리로 빌드한다. `BUILD_SHARED_LIBS=OFF`는 명시적 정적 빌드 선택이다. iOS에서는 프레임워크, WebAssembly에서는 사이드 모듈을 구성한다. 기기 API의 실제 이용 가능성은 플랫폼 권한과 호스트에 따라 다르다.\n"
+    },
+    {
+      "id": "b000004",
+      "kind": "blank",
+      "start_line": 4,
+      "end_line": 4,
+      "raw": "\n"
+    },
+    {
+      "id": "b000005",
+      "kind": "paragraph",
+      "start_line": 5,
+      "end_line": 5,
+      "raw": "공유 대상의 유형과 주요 계약을 테스트한다. 플랫폼별 실제 동작은 해당 운영체제와 도구 체인에서 별도 검증해야 한다.\n"
+    }
+  ],
+  "outline": [
+    {
+      "block_id": "b000001",
+      "parent_id": null,
+      "level": 1,
+      "title": "동적 라이브러리 빌드",
+      "anchor": "동적-라이브러리-빌드",
+      "start_line": 1
+    }
+  ],
+  "indexes": {
+    "directive_candidates": [
+      {
+        "block_id": "b000005",
+        "line": 5,
+        "text": "공유 대상의 유형과 주요 계약을 테스트한다. 플랫폼별 실제 동작은 해당 운영체제와 도구 체인에서 별도 검증해야 한다.",
+        "basis": "lexical_match",
+        "context": "paragraph"
+      }
+    ],
+    "commands": [],
+    "links": [],
+    "tables": []
+  },
+  "provenance": {
+    "generator": "workspace-docs",
+    "version": "1.0.0",
+    "profile": "lossless-blocks-v1",
+    "derived": true
+  }
+}

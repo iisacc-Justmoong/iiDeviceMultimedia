@@ -1,5 +1,6 @@
 #include "HardwareAppleIds.h"
 #include "HardwareInternal.h"
+#include "AppleRunLoopStop.h"
 #import <AudioToolbox/AudioToolbox.h>
 #import <CoreBluetooth/CoreBluetooth.h>
 #import <CoreMIDI/CoreMIDI.h>
@@ -416,10 +417,9 @@ MidiRegistry &midi_registry() {
 }
 struct MidiPump final {
   std::thread thread;
-  std::atomic<bool> stopping{false};
+  AppleRunLoopStop runloop;
   std::shared_ptr<std::atomic<std::uint64_t>> epoch =
       std::make_shared<std::atomic<std::uint64_t>>(0);
-  std::atomic<CFRunLoopRef> loop{nullptr};
   bool registered = false;
   Result<void> start() {
     auto ready = std::make_shared<std::promise<OSStatus>>();
@@ -428,17 +428,10 @@ struct MidiPump final {
     try {
       thread = std::thread([this, ready, changed] {
           @autoreleasepool {
-            auto current = CFRunLoopGetCurrent();
-            CFRetain(current);
-            loop = current;
-            CFRunLoopSourceContext source_context{};
-            auto source =
-                CFRunLoopSourceCreate(kCFAllocatorDefault, 0, &source_context);
-            if (!source) {
+            if (!runloop.attach()) {
               ready->set_value(-1);
               return;
             }
-            CFRunLoopAddSource(current, source, kCFRunLoopDefaultMode);
             MIDIClientRef client = 0;
             OSStatus status = 0;
             {
@@ -456,14 +449,14 @@ struct MidiPump final {
             }
             ready->set_value(status);
             if (!status)
-              while (!stopping.load(std::memory_order_acquire))
+              for (;;)
                 @autoreleasepool {
-                  CFRunLoopRunInMode(kCFRunLoopDefaultMode, 0.025, false);
+                  if (!runloop.run_once())
+                    break;
                 }
             if (client)
               MIDIClientDispose(client);
-            CFRunLoopRemoveSource(current, source, kCFRunLoopDefaultMode);
-            CFRelease(source);
+            runloop.detach();
           }
       });
     } catch (const std::system_error &error) {
@@ -479,14 +472,9 @@ struct MidiPump final {
     std::unique_lock<std::mutex> lock(registry.mutex, std::defer_lock);
     if (registered)
       lock.lock();
-    stopping.store(true, std::memory_order_release);
-    auto current = loop.load();
-    if (current)
-      CFRunLoopWakeUp(current);
+    runloop.request_stop();
     if (thread.joinable())
       thread.join();
-    if (current)
-      CFRelease(current);
     if (registered) {
       registry.shared.reset();
       registry.current = nullptr;

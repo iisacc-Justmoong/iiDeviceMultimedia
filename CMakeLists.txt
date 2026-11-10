@@ -6,10 +6,10 @@ include(CMakePackageConfigHelpers)
 include(CTest)
 include(cmake/ArchitecturePolicy.cmake)
 option(BUILD_SHARED_LIBS "Build shared iiDeviceMultimedia libraries" ON)
-option(IIDEVICEMULTIMEDIA_BUILD_EXAMPLES "Build the native device inventory example" ON)
+option(IIDEVICEMULTIMEDIA_BUILD_EXAMPLES "Build the native device inventory example" OFF)
 option(IIDEVICEMULTIMEDIA_WASM_THREADS "Enable Emscripten pthread workers" ON)
-if(EMSCRIPTEN OR CMAKE_SYSTEM_NAME STREQUAL "iOS")
-    set(BUILD_SHARED_LIBS OFF)
+if(EMSCRIPTEN AND BUILD_SHARED_LIBS)
+    set_property(GLOBAL PROPERTY TARGET_SUPPORTS_SHARED_LIBS TRUE)
 endif()
 find_package(Threads REQUIRED)
 
@@ -36,6 +36,23 @@ target_include_directories(iiDeviceMultimedia PUBLIC
 set_target_properties(iiDeviceMultimedia PROPERTIES CXX_EXTENSIONS OFF
     VERSION ${PROJECT_VERSION} SOVERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
     WINDOWS_EXPORT_ALL_SYMBOLS ON)
+if(BUILD_SHARED_LIBS)
+    if(CMAKE_SYSTEM_NAME STREQUAL "iOS")
+        set_target_properties(iiDeviceMultimedia PROPERTIES FRAMEWORK TRUE FRAMEWORK_VERSION A
+            MACOSX_FRAMEWORK_IDENTIFIER "com.iisacc.iiDeviceMultimedia")
+    elseif(EMSCRIPTEN)
+        target_compile_options(iiDeviceMultimedia PRIVATE -fPIC -sSIDE_MODULE=1)
+        target_link_options(iiDeviceMultimedia PRIVATE -sSIDE_MODULE=1)
+    elseif(APPLE)
+        set_property(TARGET iiDeviceMultimedia APPEND PROPERTY INSTALL_RPATH "@loader_path")
+    elseif(UNIX)
+        set_property(TARGET iiDeviceMultimedia APPEND PROPERTY INSTALL_RPATH "$ORIGIN")
+    endif()
+    if(BUILD_TESTING AND NOT CMAKE_CROSSCOMPILING)
+        add_test(NAME iiDeviceMultimedia.shared_type COMMAND ${CMAKE_COMMAND}
+            "-DTARGET_TYPE=$<TARGET_PROPERTY:iiDeviceMultimedia,TYPE>" -P "${CMAKE_CURRENT_SOURCE_DIR}/tests/shared_target_type.cmake")
+    endif()
+endif()
 if(MSVC)
     target_compile_options(iiDeviceMultimedia PRIVATE /utf-8)
 endif()
@@ -78,7 +95,8 @@ set(_package_dir "${CMAKE_INSTALL_LIBDIR}/cmake/iiDeviceMultimedia")
 install(TARGETS iiDeviceMultimedia EXPORT iiDeviceMultimediaTargets
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+    FRAMEWORK DESTINATION ${CMAKE_INSTALL_LIBDIR})
 foreach(_header IN LISTS _device_headers)
     get_filename_component(_directory "${_header}" DIRECTORY)
     install(FILES "src/${_header}" DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/iiDeviceMultimedia/${_directory}")
@@ -96,6 +114,15 @@ install(DIRECTORY docs/ DESTINATION "${CMAKE_INSTALL_DATADIR}/iiDeviceMultimedia
 file(GENERATE OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/device-boundary-$<CONFIG>.txt"
     CONTENT "$<TARGET_PROPERTY:iiDeviceMultimedia,LINK_LIBRARIES>\n$<TARGET_PROPERTY:iiDeviceMultimedia,INTERFACE_LINK_LIBRARIES>\n$<TARGET_PROPERTY:iiDeviceMultimedia,INCLUDE_DIRECTORIES>\n")
 if(BUILD_TESTING)
+    add_test(NAME iiDeviceMultimedia.ExamplePolicyUnit
+        COMMAND "${Python3_EXECUTABLE}" -B -m unittest discover
+            -s "${CMAKE_CURRENT_SOURCE_DIR}/tests" -p test_example_policy.py)
+    if(CMAKE_GENERATOR MATCHES "Ninja|Makefiles")
+        add_test(NAME iiDeviceMultimedia.ExampleTargetPolicy
+            COMMAND "${Python3_EXECUTABLE}" -B "${CMAKE_CURRENT_SOURCE_DIR}/tests/example_policy.py"
+                --cmake "${CMAKE_COMMAND}" --build "${CMAKE_BINARY_DIR}"
+                --enabled "$<IF:$<BOOL:${IIDEVICEMULTIMEDIA_BUILD_EXAMPLES}>,ON,OFF>")
+    endif()
     add_test(NAME iiDeviceMultimedia.Independence
         COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/independence.py"
             --source "${CMAKE_CURRENT_SOURCE_DIR}" --build "${CMAKE_CURRENT_BINARY_DIR}")
@@ -114,6 +141,11 @@ if(BUILD_TESTING)
         target_link_libraries(iiDeviceMultimediaHardwareTests PRIVATE ole32)
     endif()
     if(APPLE)
+        add_executable(iiDeviceMultimediaAppleRunLoopTests tests/apple_runloop.cpp)
+        target_compile_features(iiDeviceMultimediaAppleRunLoopTests PRIVATE cxx_std_23)
+        target_link_libraries(iiDeviceMultimediaAppleRunLoopTests PRIVATE "-framework CoreFoundation")
+        add_test(NAME iiDeviceMultimedia.AppleRunLoop COMMAND iiDeviceMultimediaAppleRunLoopTests)
+        set_tests_properties(iiDeviceMultimedia.AppleRunLoop PROPERTIES TIMEOUT 30)
         set_tests_properties(iiDeviceMultimedia.Hardware PROPERTIES
             ENVIRONMENT "OBJC_DEBUG_MISSING_POOLS=YES" FAIL_REGULAR_EXPRESSION "MISSING POOLS")
     endif()

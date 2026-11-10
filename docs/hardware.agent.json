@@ -10,11 +10,11 @@
   },
   "source": {
     "path": "docs/hardware.md",
-    "sha256": "355f168fb8faa74c344813b0b56120988c655778524e200f2db175d38c3693ea",
-    "bytes": 15798,
-    "line_count": 99,
+    "sha256": "7e9d0cf30c299060c7de8317d413f82c13ec383af8c18032aa6ace21bf8135a2",
+    "bytes": 16394,
+    "line_count": 106,
     "encoding": "utf-8",
-    "language": "en"
+    "language": "ko"
   },
   "document": {
     "title": "Native hardware I/O",
@@ -428,43 +428,71 @@
     },
     {
       "id": "b000051",
-      "kind": "heading",
+      "kind": "paragraph",
       "start_line": 82,
-      "end_line": 82,
+      "end_line": 85,
+      "raw": "CoreMIDI 실행 루프는 반복적인 시간 제한 대신 시스템 알림을 기다린다. 마지막\n소유자가 닫히면 신호를 보존하는 실행 루프 소스로 대기를 깨우고 스레드가\n종료될 때까지 기다린다. 이는 위에서 설명한 토폴로지 알림 누락 복구 주기와는\n별개이다.\n"
+    },
+    {
+      "id": "b000052",
+      "kind": "blank",
+      "start_line": 86,
+      "end_line": 86,
+      "raw": "\n"
+    },
+    {
+      "id": "b000053",
+      "kind": "heading",
+      "start_line": 87,
+      "end_line": 87,
       "raw": "## Usage and verification\n",
       "level": 2,
       "title": "Usage and verification"
     },
     {
-      "id": "b000052",
+      "id": "b000054",
       "kind": "blank",
-      "start_line": 83,
-      "end_line": 83,
+      "start_line": 88,
+      "end_line": 88,
       "raw": "\n"
     },
     {
-      "id": "b000053",
+      "id": "b000055",
       "kind": "fenced_code",
-      "start_line": 84,
-      "end_line": 97,
+      "start_line": 89,
+      "end_line": 102,
       "raw": "```cpp\n#include <iiDeviceMultimedia/IO/Hardware.h>\nii::device::Hardware hardware( [](ii::device::HardwareEvent event) {\n    if (!event.midi.empty()) {\n        auto note = ii::device::protocol::note(event.midi.front());\n        if (note) { /* consume only the required fields */ }\n    }\n});\nauto inputs = hardware.enumerate(ii::device::DeviceKind::midi_input);\nif (inputs && !inputs->empty()) {\n    auto endpoint = hardware.open_midi(inputs->front().id);\n    // Pump hardware.poll(), then close the endpoint between polls.\n}\n```\n",
       "language": "cpp",
       "code": "#include <iiDeviceMultimedia/IO/Hardware.h>\nii::device::Hardware hardware( [](ii::device::HardwareEvent event) {\n    if (!event.midi.empty()) {\n        auto note = ii::device::protocol::note(event.midi.front());\n        if (note) { /* consume only the required fields */ }\n    }\n});\nauto inputs = hardware.enumerate(ii::device::DeviceKind::midi_input);\nif (inputs && !inputs->empty()) {\n    auto endpoint = hardware.open_midi(inputs->front().id);\n    // Pump hardware.poll(), then close the endpoint between polls.\n}\n",
       "closed": true
     },
     {
-      "id": "b000054",
+      "id": "b000056",
       "kind": "blank",
-      "start_line": 98,
-      "end_line": 98,
+      "start_line": 103,
+      "end_line": 103,
       "raw": "\n"
     },
     {
-      "id": "b000055",
+      "id": "b000057",
       "kind": "paragraph",
-      "start_line": 99,
-      "end_line": 99,
+      "start_line": 104,
+      "end_line": 104,
       "raw": "`examples/hardware.cpp` performs read-only inventory without starting a scan or microphone. `tests/protocols.cpp` covers binary formats and malformed input. `tests/hardware_state.cpp` covers combined payload/capacity, stale callbacks, active-delivery quiescence, quota reuse and concurrent audio-ring order. `tests/hardware.cpp` checks public validation and available native enumeration; on macOS it creates a CoreMIDI destination, observes addition, sends MIDI 2.0 UMP through the OS, receives it through host polling, observes removal, and repeatedly reuses endpoint capacity. The test also closes every MIDI hub, recreates the native notification pump, receives another OS-routed message, and checks addition/removal again. Installed consumers repeat public protocol/hardware contracts. Source/build, native execution, cross-compilation and physical-device evidence are recorded separately in [validation.md](validation.md).\n"
+    },
+    {
+      "id": "b000058",
+      "kind": "blank",
+      "start_line": 105,
+      "end_line": 105,
+      "raw": "\n"
+    },
+    {
+      "id": "b000059",
+      "kind": "paragraph",
+      "start_line": 106,
+      "end_line": 106,
+      "raw": "The inventory example is excluded from the default build. Configure with `-DIIDEVICEMULTIMEDIA_BUILD_EXAMPLES=ON` to build it explicitly; registered tests remain controlled by `BUILD_TESTING`. The example target policy is checked for Ninja and Makefile generators.\n"
     }
   ],
   "outline": [
@@ -509,12 +537,12 @@
       "start_line": 50
     },
     {
-      "block_id": "b000051",
+      "block_id": "b000053",
       "parent_id": "b000001",
       "level": 2,
       "title": "Usage and verification",
       "anchor": "usage-and-verification",
-      "start_line": 82
+      "start_line": 87
     }
   ],
   "indexes": {
@@ -656,11 +684,11 @@
         "line": 76
       },
       {
-        "block_id": "b000055",
+        "block_id": "b000057",
         "label": "validation.md",
         "target": "validation.md",
         "kind": "relative",
-        "line": 99
+        "line": 104
       }
     ],
     "tables": [

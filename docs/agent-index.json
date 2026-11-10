@@ -25,10 +25,17 @@
       "role": "overview"
     },
     {
+      "document_id": "urn:iisacc:document:45a4d2717faf12c2555f8b18b5b8f9228fea2f6c13f77046fb1bbbf39b16a0bb",
+      "source": "docs/DynamicLinking.md",
+      "agent_json": "docs/DynamicLinking.agent.json",
+      "source_sha256": "5d382c3e36bf252ed6e3b2482e5526a15b4d603544b1d83dc437ef0831f7f509",
+      "role": "guide"
+    },
+    {
       "document_id": "urn:iisacc:document:1a654a8f14fccaa2f42ba25ab1d5c5dbeb443b9334d556daf4bd3d6a390101f2",
       "source": "docs/README.md",
       "agent_json": "docs/README.agent.json",
-      "source_sha256": "f73e5493595ded236039d81c7c6f8198c3a21dc7c55dc5d2642e1e7cc1dd81e9",
+      "source_sha256": "ee8c0b25e81aa0612abf77cdf20228af41d2254d2338af3b5cab621e3800f9d0",
       "role": "overview"
     },
     {
@@ -63,7 +70,7 @@
       "document_id": "urn:iisacc:document:266f891bb11b523670cbffb1b53f3c03859a00abab724c64d356946d2f87fb08",
       "source": "docs/hardware.md",
       "agent_json": "docs/hardware.agent.json",
-      "source_sha256": "355f168fb8faa74c344813b0b56120988c655778524e200f2db175d38c3693ea",
+      "source_sha256": "7e9d0cf30c299060c7de8317d413f82c13ec383af8c18032aa6ace21bf8135a2",
       "role": "guide"
     },
     {

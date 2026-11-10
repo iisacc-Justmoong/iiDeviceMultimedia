@@ -79,6 +79,11 @@ it violates object lifetime and terminates.
 
 OS disconnect/stop commands can complete asynchronously (notably BLE); a successful local close proves the SDK has released its own endpoint and dispatch state, not that a remote peripheral has already observed the disconnect. CoreMIDI topology notifications use a private CFRunLoop on an owned `std::thread`, shared by active MIDI hubs and stopped/joined when the last hub closes. This allows headless host execution without pumping a GUI run loop. CoreMIDI may retain its original process notification context after all clients close, so watched MIDI topology also reconciles native enumeration every 100 ms. Notifications trigger an earlier scan; periodic reconciliation preserves addition/removal after complete pump recreation. Timing still depends on host pumping and native call duration. A host that initialized CoreMIDI earlier must keep its own original native notification run loop alive. Removing a MIDI virtual endpoint removes it from OS enumeration. Shared OS devices, pairing records, external storage and process allocator pages are not owned by this hub. Memory wiping and immediate RSS reduction are not removal guarantees.
 
+CoreMIDI 실행 루프는 반복적인 시간 제한 대신 시스템 알림을 기다린다. 마지막
+소유자가 닫히면 신호를 보존하는 실행 루프 소스로 대기를 깨우고 스레드가
+종료될 때까지 기다린다. 이는 위에서 설명한 토폴로지 알림 누락 복구 주기와는
+별개이다.
+
 ## Usage and verification
 
 ```cpp
@@ -97,3 +102,5 @@ if (inputs && !inputs->empty()) {
 ```
 
 `examples/hardware.cpp` performs read-only inventory without starting a scan or microphone. `tests/protocols.cpp` covers binary formats and malformed input. `tests/hardware_state.cpp` covers combined payload/capacity, stale callbacks, active-delivery quiescence, quota reuse and concurrent audio-ring order. `tests/hardware.cpp` checks public validation and available native enumeration; on macOS it creates a CoreMIDI destination, observes addition, sends MIDI 2.0 UMP through the OS, receives it through host polling, observes removal, and repeatedly reuses endpoint capacity. The test also closes every MIDI hub, recreates the native notification pump, receives another OS-routed message, and checks addition/removal again. Installed consumers repeat public protocol/hardware contracts. Source/build, native execution, cross-compilation and physical-device evidence are recorded separately in [validation.md](validation.md).
+
+The inventory example is excluded from the default build. Configure with `-DIIDEVICEMULTIMEDIA_BUILD_EXAMPLES=ON` to build it explicitly; registered tests remain controlled by `BUILD_TESTING`. The example target policy is checked for Ninja and Makefile generators.
