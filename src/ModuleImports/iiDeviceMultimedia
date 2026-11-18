@@ -1,0 +1,6 @@
+#pragma once
+
+// C++ public entry for iiDeviceMultimedia; the linked components select the API.
+#include <iiDeviceMultimedia/IO/Hardware.h>
+#include <iiDeviceMultimedia/IO/Protocols.h>
+#include <iiDeviceMultimedia/IO/Result.h>
