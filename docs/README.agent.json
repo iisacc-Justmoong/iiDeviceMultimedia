@@ -10,9 +10,9 @@
   },
   "source": {
     "path": "docs/README.md",
-    "sha256": "ee8c0b25e81aa0612abf77cdf20228af41d2254d2338af3b5cab621e3800f9d0",
-    "bytes": 1091,
-    "line_count": 20,
+    "sha256": "b238c407808c0ea968d1cb6fa1a9219d5f67211094310bb20e6c5fe6b677dda0",
+    "bytes": 1156,
+    "line_count": 21,
     "encoding": "utf-8",
     "language": "en"
   },
@@ -79,8 +79,8 @@
       "id": "b000008",
       "kind": "table",
       "start_line": 8,
-      "end_line": 19,
-      "raw": "| Document | Agent JSON |\n| --- | --- |\n| [`AGENT.md`](../AGENT.md) | [JSON](entrypoints/AGENT.agent.json) |\n| [`README.md`](../README.md) | [JSON](entrypoints/README.agent.json) |\n| [`docs/DynamicLinking.md`](DynamicLinking.md) | [JSON](DynamicLinking.agent.json) |\n| [`docs/Windows.md`](Windows.md) | [JSON](Windows.agent.json) |\n| [`docs/WindowsBuildAndRun.md`](WindowsBuildAndRun.md) | [JSON](WindowsBuildAndRun.agent.json) |\n| [`docs/documentation-structure.md`](documentation-structure.md) | [JSON](documentation-structure.agent.json) |\n| [`docs/extraction.md`](extraction.md) | [JSON](extraction.agent.json) |\n| [`docs/hardware.md`](hardware.md) | [JSON](hardware.agent.json) |\n| [`docs/independence.md`](independence.md) | [JSON](independence.agent.json) |\n| [`docs/validation.md`](validation.md) | [JSON](validation.agent.json) |\n",
+      "end_line": 20,
+      "raw": "| Document | Agent JSON |\n| --- | --- |\n| [`AGENT.md`](../AGENT.md) | [JSON](entrypoints/AGENT.agent.json) |\n| [`README.md`](../README.md) | [JSON](entrypoints/README.agent.json) |\n| [`docs/DynamicLinking.md`](DynamicLinking.md) | [JSON](DynamicLinking.agent.json) |\n| [`docs/License.md`](License.md) | [JSON](License.agent.json) |\n| [`docs/Windows.md`](Windows.md) | [JSON](Windows.agent.json) |\n| [`docs/WindowsBuildAndRun.md`](WindowsBuildAndRun.md) | [JSON](WindowsBuildAndRun.agent.json) |\n| [`docs/documentation-structure.md`](documentation-structure.md) | [JSON](documentation-structure.agent.json) |\n| [`docs/extraction.md`](extraction.md) | [JSON](extraction.agent.json) |\n| [`docs/hardware.md`](hardware.md) | [JSON](hardware.agent.json) |\n| [`docs/independence.md`](independence.md) | [JSON](independence.agent.json) |\n| [`docs/validation.md`](validation.md) | [JSON](validation.agent.json) |\n",
       "columns": [
         "Document",
         "Agent JSON"
@@ -97,6 +97,10 @@
         [
           "[`docs/DynamicLinking.md`](DynamicLinking.md)",
           "[JSON](DynamicLinking.agent.json)"
+        ],
+        [
+          "[`docs/License.md`](License.md)",
+          "[JSON](License.agent.json)"
         ],
         [
           "[`docs/Windows.md`](Windows.md)",
@@ -131,8 +135,8 @@
     {
       "id": "b000009",
       "kind": "html",
-      "start_line": 20,
-      "end_line": 20,
+      "start_line": 21,
+      "end_line": 21,
       "raw": "<!-- workspace-docs:document-map:end -->\n"
     }
   ],
@@ -202,101 +206,115 @@
       },
       {
         "block_id": "b000008",
+        "label": "`docs/License.md`",
+        "target": "License.md",
+        "kind": "relative",
+        "line": 13
+      },
+      {
+        "block_id": "b000008",
+        "label": "JSON",
+        "target": "License.agent.json",
+        "kind": "relative",
+        "line": 13
+      },
+      {
+        "block_id": "b000008",
         "label": "`docs/Windows.md`",
         "target": "Windows.md",
         "kind": "relative",
-        "line": 13
+        "line": 14
       },
       {
         "block_id": "b000008",
         "label": "JSON",
         "target": "Windows.agent.json",
         "kind": "relative",
-        "line": 13
+        "line": 14
       },
       {
         "block_id": "b000008",
         "label": "`docs/WindowsBuildAndRun.md`",
         "target": "WindowsBuildAndRun.md",
         "kind": "relative",
-        "line": 14
+        "line": 15
       },
       {
         "block_id": "b000008",
         "label": "JSON",
         "target": "WindowsBuildAndRun.agent.json",
         "kind": "relative",
-        "line": 14
+        "line": 15
       },
       {
         "block_id": "b000008",
         "label": "`docs/documentation-structure.md`",
         "target": "documentation-structure.md",
         "kind": "relative",
-        "line": 15
+        "line": 16
       },
       {
         "block_id": "b000008",
         "label": "JSON",
         "target": "documentation-structure.agent.json",
         "kind": "relative",
-        "line": 15
+        "line": 16
       },
       {
         "block_id": "b000008",
         "label": "`docs/extraction.md`",
         "target": "extraction.md",
         "kind": "relative",
-        "line": 16
+        "line": 17
       },
       {
         "block_id": "b000008",
         "label": "JSON",
         "target": "extraction.agent.json",
         "kind": "relative",
-        "line": 16
+        "line": 17
       },
       {
         "block_id": "b000008",
         "label": "`docs/hardware.md`",
         "target": "hardware.md",
         "kind": "relative",
-        "line": 17
+        "line": 18
       },
       {
         "block_id": "b000008",
         "label": "JSON",
         "target": "hardware.agent.json",
         "kind": "relative",
-        "line": 17
+        "line": 18
       },
       {
         "block_id": "b000008",
         "label": "`docs/independence.md`",
         "target": "independence.md",
         "kind": "relative",
-        "line": 18
+        "line": 19
       },
       {
         "block_id": "b000008",
         "label": "JSON",
         "target": "independence.agent.json",
         "kind": "relative",
-        "line": 18
+        "line": 19
       },
       {
         "block_id": "b000008",
         "label": "`docs/validation.md`",
         "target": "validation.md",
         "kind": "relative",
-        "line": 19
+        "line": 20
       },
       {
         "block_id": "b000008",
         "label": "JSON",
         "target": "validation.agent.json",
         "kind": "relative",
-        "line": 19
+        "line": 20
       }
     ],
     "tables": [
@@ -318,6 +336,10 @@
           [
             "[`docs/DynamicLinking.md`](DynamicLinking.md)",
             "[JSON](DynamicLinking.agent.json)"
+          ],
+          [
+            "[`docs/License.md`](License.md)",
+            "[JSON](License.agent.json)"
           ],
           [
             "[`docs/Windows.md`](Windows.md)",
