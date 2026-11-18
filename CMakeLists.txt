@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.31)
 project(iiDeviceMultimedia VERSION 0.2.1 LANGUAGES CXX)
+set(iiDeviceMultimedia_SPDX_LICENSE "Apache-2.0")
 
 include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
@@ -108,7 +109,7 @@ write_basic_package_version_file("${CMAKE_CURRENT_BINARY_DIR}/iiDeviceMultimedia
     VERSION ${PROJECT_VERSION} COMPATIBILITY SameMinorVersion)
 install(FILES "${CMAKE_CURRENT_BINARY_DIR}/iiDeviceMultimediaConfig.cmake"
     "${CMAKE_CURRENT_BINARY_DIR}/iiDeviceMultimediaConfigVersion.cmake" DESTINATION ${_package_dir})
-install(FILES README.md DESTINATION "${CMAKE_INSTALL_DATADIR}/iiDeviceMultimedia")
+install(FILES README.md LICENSE NOTICE DESTINATION "${CMAKE_INSTALL_DATADIR}/iiDeviceMultimedia")
 install(DIRECTORY docs/ DESTINATION "${CMAKE_INSTALL_DATADIR}/iiDeviceMultimedia/docs")
 
 file(GENERATE OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/device-boundary-$<CONFIG>.txt"
@@ -117,6 +118,9 @@ if(BUILD_TESTING)
     add_test(NAME iiDeviceMultimedia.ExamplePolicyUnit
         COMMAND "${Python3_EXECUTABLE}" -B -m unittest discover
             -s "${CMAKE_CURRENT_SOURCE_DIR}/tests" -p test_example_policy.py)
+    add_test(NAME iiDeviceMultimedia.License
+        COMMAND "${Python3_EXECUTABLE}" -B -m unittest discover
+            -s "${CMAKE_CURRENT_SOURCE_DIR}/tests" -p test_license.py)
     if(CMAKE_GENERATOR MATCHES "Ninja|Makefiles")
         add_test(NAME iiDeviceMultimedia.ExampleTargetPolicy
             COMMAND "${Python3_EXECUTABLE}" -B "${CMAKE_CURRENT_SOURCE_DIR}/tests/example_policy.py"

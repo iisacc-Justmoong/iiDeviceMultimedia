@@ -30,6 +30,14 @@ Apple notification pump owns a joined standard thread, and native BLE callback
 retirement must not depend on a Core TaskScope.
 README.md is English. Do not disturb active apps, unrelated changes or hardware.
 
+## 라이선스
+
+이 저장소의 iiDeviceMultimedia는 iiSDK 모듈이며 Apache License 2.0이다. 자사 코드, 문서, 도구, 테스트가 포함된다. 저작권 표시는 `Copyright (c) 2026 iisacc`이고 고지는 루트 `NOTICE`에 있다. 사람용 한국어 설명은 [docs/License.md](docs/License.md)이다.
+
+`SDK` 아래의 모든 iiSDK 모듈은 Apache-2.0이다. `Product` 아래의 iisacc 제품은 GNU Affero General Public License 버전 3 또는 그 이후 버전(AGPL-3.0-or-later)이다.
+
+제3자와 벤더 코드는 원래 라이선스를 유지한다. 문서 재편 중에도 그 라이선스와 외부 원본은 보존한다.
+
 <!-- workspace-docs:agent:start -->
 ## 문서 구조와 에이전트 탐색
 
